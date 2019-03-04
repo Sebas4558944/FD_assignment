@@ -14,12 +14,13 @@ def calcISA(hft=0,hm=0,P=0):
     #2-geopotential altitude in m as input
     #3-pressure as input
     #Returns all properties of the local atmosphere
+
     #Only input one!!
     #P in Pa
     #hm is geopotential altitude in m
     #hft is geopotential altitude in ft
-    #
     #constants
+
     g=9.80665
     R=287.0
     #Altitude and temp gradients
@@ -29,6 +30,7 @@ def calcISA(hft=0,hm=0,P=0):
     Tl = [288.15]
     Pl = [101325.0]
     rhol = [1.225]
+
     #Initialize lists
     i=0
     for i in range(len(al)):
@@ -42,6 +44,7 @@ def calcISA(hft=0,hm=0,P=0):
             rhoi = rhol[i] * (Tl[i+1]/Tl[i]) ** ((-g / (R * al[i])) - 1)
         Pl.append(Pi)
         rhol.append(rhoi)   
+
     #If pressure is the input, calculate height, density and temperature
     if P!=0:
         i = 0
@@ -55,6 +58,7 @@ def calcISA(hft=0,hm=0,P=0):
             T = Tl[i] *((P / Pl[i]) ** (-(al[i] * R)/ g))
             h1 = hl[i] +((T - Tl[i]) / al[i])
             rho = rhol[i] *((T / Tl[i])**((-g /(R * al[i]))-1))
+
     #If height is the input, calculate the pressure, density and temperature.
     elif hm!=0 or hft!=0:
         if hm!=0:
@@ -71,6 +75,7 @@ def calcISA(hft=0,hm=0,P=0):
         else: 
             P = Pl[i]*((T / Tl[i])**(-g/(R*al[i])))
             rho = rhol[i]*((T / Tl[i])**((-g/(R*al[i]))-1))
+    
     return P,T,rho,h1 #Pressure [Pa], T [K], Rho [kg/m^3], Geometric alt [m]
             
         
