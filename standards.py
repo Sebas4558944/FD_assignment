@@ -7,10 +7,10 @@ Created on Wed Mar 06 09:47:34 2019
 from conversion_helpers import *
 from Cit_par import *
 import numpy as np
-#input for me (Martijn to get my values to solve array by hand)
-hp = 5790.*ft_to_m  #pressure altitude
-Vc = 161.*kts_to_ms #indicated airspeed
-Tm = 5.             #measured airspeed in celsius
+##input for me (Martijn to get my values to solve array by hand)
+#hp = 5790.*ft_to_m  #pressure altitude
+#Vc = 161.*kts_to_ms #indicated airspeed
+#Tm = 5.             #measured airspeed in celsius
 
 def true_airspeed(hp,Vc, Tm):
     Tm = Tm+273.15
@@ -19,5 +19,3 @@ def true_airspeed(hp,Vc, Tm):
     
     Vt = M*(np.sqrt(gamma*R*Tm/(1+(gamma-1)/2*M**2)))
     return Vt
-    
-print true_airspeed(hp,Vc,Tm)
