@@ -43,6 +43,8 @@ lambdas = -0.0065         # temperature gradient in ISA [K/m]
 Temp0  = 288.15          # temperature at sea level in ISA [K]
 R      = 287.05          # specific gas constant [m^2/sec^2K]
 g      = 9.81            # [m/sec^2] (gravity constant)
+gamma = 1.4             #gamma from ISA formulas for pefect gas
+P0 =  rho0*R*Temp0                  #pressure at sea level in ISA [Pa]
 
 # air density [kg/m^3]  
 rho    = rho0 * power( ((1+(lambdas * hp0 / Temp0))), (-((g / (lambdas*R)) + 1)))   
