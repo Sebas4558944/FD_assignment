@@ -100,7 +100,7 @@ BA=np.linalg.inv(C1A)*-C3A
 
 #Outputs
 #Symmetric outputs -> u, theta
-#x=[u,a,theta,p,udot,thetadot]
+#x=[u,a,theta,p]T
 #y=[u,theta]T
 
 CS=np.matrix([[1,0,0,0],\
