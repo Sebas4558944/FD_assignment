@@ -26,7 +26,7 @@ def calcISA(hft=0,hm=0,P=0):
     #Altitude and temp gradients
     hl = [0.0, 11000.0, 20000.0, 32000.0, 47000.0, 51000.0, 71000.0, 84852.0, 100000.0]
     al = [-6.5e-3, 0.0e-3, 1.0e-3, 2.8e-3, 0.0e-3, -2.8e-3, -2.0e-3, 0.0]
-    #Sea level values
+    # Sea level values
     Tl = [288.15]
     Pl = [101325.0]
     rhol = [1.225]
@@ -34,22 +34,22 @@ def calcISA(hft=0,hm=0,P=0):
     #Initialize lists
     i=0
     for i in range(len(al)):
-        Ti = Tl[i] + al[i]*(hl[i+1]-hl[i])
+        Ti = Tl[i] + al[i] * (hl[i + 1] - hl[i])
         Tl.append(Ti)
         if al[i] == 0:
-            Pi = Pl[i]* (e**-((g/(R*Tl[i]))*(hl[i+1]-hl[i])))
-            rhoi = rhol[i]* (e**-((g/(R*Tl[i]))*(hl[i+1]-hl[i])))
-        else:        
-            Pi = Pl[i] * ((Tl[i+1]/Tl[i]) ** (-g / (R * al[i])))
-            rhoi = rhol[i] * (Tl[i+1]/Tl[i]) ** ((-g / (R * al[i])) - 1)
+            Pi = Pl[i] * (e ** -((g / (R * Tl[i])) * (hl[i + 1] - hl[i])))
+            rhoi = rhol[i] * (e ** -((g / (R * Tl[i])) * (hl[i + 1] - hl[i])))
+        else:
+            Pi = Pl[i] * ((Tl[i + 1] / Tl[i]) ** (-g / (R * al[i])))
+            rhoi = rhol[i] * (Tl[i + 1] / Tl[i]) ** ((-g / (R * al[i])) - 1)
         Pl.append(Pi)
         rhol.append(rhoi)   
 
     #If pressure is the input, calculate height, density and temperature
     if P!=0:
         i = 0
-        while P<Pl[i+1]:
-            i = i+1
+        while P < Pl[i + 1]:
+            i = i + 1
         if al[i] == 0:
             T = Tl[i]
             h1 = hl[i] - log(P/Pl[i])*(R*T/g)
@@ -66,9 +66,9 @@ def calcISA(hft=0,hm=0,P=0):
         elif hft!=0:
             h1=hft*0.3048 
         i = 0
-        while h1>hl[i+1]:
-            i = i+1
-        T= Tl[i] + al[i] * (h1-hl[i])
+        while h1 > hl[i + 1]:
+            i = i + 1
+        T = Tl[i] + al[i] * (h1 - hl[i])
         if al[i] == 0:
             rho = rhol[i] * exp( -(g / (R * T) * (h1 - hl[i])))
             P = Pl[i]*exp(-(g/(R*T)*(h1 - hl[i])))
