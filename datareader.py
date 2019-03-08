@@ -11,7 +11,7 @@ f2m=ft_to_m
 l2k=lbs_to_kg
 k2m=kts_to_ms
 
-def importData(f,Process=False):
+def importExcelData(f):
     #f is filename
     #Process defines wheter or not data is completed and converted to SI \
     # or standard units, default is false.
@@ -30,8 +30,6 @@ def importData(f,Process=False):
     
     
     blockfuel=arr[17,3] #in lbs
-    if Process:
-        blockfuel=blockfuel*l2k
     #Aircraft config
     ACC_CLCD=arr[22,4]
     
@@ -79,5 +77,22 @@ def importData(f,Process=False):
     ACC_Trim, El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, \
     Cg_shift, eigenmotions
 
-f='Reference_Datasheet.csv'
-listed=importData(f,False)
+#f='Reference_Datasheet.csv'
+#listed=importData(f)
+
+def importFlightData(f):
+    import mat4py
+    data=mat4py.loadmat("f")
+    flightdata = data.get('flightdata',{})
+    return flightdata
+
+def getValues(key):
+    keydict=flightdata.get(key,{})
+    #description units data
+    keydesc=keydict.get('description',{})
+    keyunits=keydict.get('units',{})
+    keydata=keydict.get('data',{})
+    return keydesc,keyunits,keydata
+    
+flightdata=importFlightData('reference.mat')
+keys=flightdata.keys()
