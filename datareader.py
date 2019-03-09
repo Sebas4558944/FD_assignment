@@ -77,12 +77,10 @@ def importExcelData(f):
     ACC_Trim, El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, \
     Cg_shift, eigenmotions
 
-#f='Reference_Datasheet.csv'
-#listed=importData(f)
 
 def importFlightData(f):
     import mat4py
-    data=mat4py.loadmat("f")
+    data=mat4py.loadmat(f)
     flightdata = data.get('flightdata',{})
     return flightdata
 
@@ -93,6 +91,6 @@ def getValues(key):
     keyunits=keydict.get('units',{})
     keydata=keydict.get('data',{})
     return keydesc,keyunits,keydata
-    
+
 flightdata=importFlightData('reference.mat')
 keys=flightdata.keys()
