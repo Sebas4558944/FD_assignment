@@ -4,8 +4,8 @@ Created on Wed Mar 06 09:47:34 2019
 
 @author: msjor
 """
-from conversion_helpers import *
-from Cit_par import *
+#from conversion_helpers import *
+from Cit_par import gamma,Temp0,R,rho0,lambdas,g,P0
 import numpy as np
 ##input for me (Martijn to get my values to solve array by hand)
 #hp = 5790.*ft_to_m  #pressure altitude
