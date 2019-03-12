@@ -94,14 +94,19 @@ def importExcelData(f):
     CL_CD_series1=arr[27:33,1:9]
     CL_CD_series1str=arr_str[27:33,1:9]
     CL_CD_series2=arr[43:49,1:9]
-#    CL_CD_series2str=arr_str[43:49,1:9]
+    CL_CD_series2str=arr_str[43:49,1:9]
     
     
     #fill in ET
     for i in range(len(CL_CD_series1[:,0])):
         time=convertToSec(CL_CD_series1str[i,0])
         CL_CD_series1[i,1]=int(time)
-        
+        try:
+            time=convertToSec(CL_CD_series2str[i,0])
+            CL_CD_series2[i,1]=int(time)
+        except ValueError:
+            pass
+            
     #Aircraft config
     ACC_Trim=arr_str[53,4]
     
