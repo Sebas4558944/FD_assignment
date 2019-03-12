@@ -30,18 +30,21 @@ def calc_delta_reduced(delta_measured, Cm_delta, Tcs, Tc):
     return delta_reduced
 
 
+def calc_derivative(alpha_1, delta_1, alpha_2, delta_2):
+        return (delta_2-delta_1)/(alpha_2 - alpha_1)
+
+
 f='Reference_Datasheet.csv'
 date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
 , passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
  El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
  = importExcelData(f)
 
-print len(El_Trim_Curve)
 alpha = []
 delta = []
 for i in range(len(El_Trim_Curve)):
     alpha.append(El_Trim_Curve[i][4])
     delta.append(El_Trim_Curve[i][5])
 
-print alpha
-print delta
+plt.scatter(alpha, delta)
+plt.show()

@@ -177,13 +177,12 @@ def getFDValues(f):
 #%%
 #    Test functions
 #    
-f='Reference_Datasheet.csv'
-date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
-, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
- El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
- = importExcelData(f)
+# f='Reference_Datasheet.csv'
+# date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
+# , passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
+#  El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
+#  = importExcelData(f)
 
-print len(El_Trim_Curve)
 # print eigenmotions[0]
 # print convertToSec(eigenmotions[0])
 # print convertToTimeStr(0,0,convertToSec(eigenmotions[0]))
