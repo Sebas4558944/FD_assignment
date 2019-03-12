@@ -1,6 +1,6 @@
 from Cit_par import *
 from reduced_condition_calculator import Conditions
-from datareader import getFDValues
+from datareader import importExcelData
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -30,12 +30,18 @@ def calc_delta_reduced(delta_measured, Cm_delta, Tcs, Tc):
     return delta_reduced
 
 
-key_list, description_list, unit_list, newDict = getFDValues('reference.mat')
+f='Reference_Datasheet.csv'
+date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
+, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
+ El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
+ = importExcelData(f)
 
-alpha = newDict.get('vane_AOA', {})
-delta_e = newDict.get('delta_e', {})
-
-plt.plot()
+print len(El_Trim_Curve)
+alpha = []
+delta = []
+for i in range(len(El_Trim_Curve)):
+    alpha.append(El_Trim_Curve[i][4])
+    delta.append(El_Trim_Curve[i][5])
 
 print alpha
-print delta_e
+print delta
