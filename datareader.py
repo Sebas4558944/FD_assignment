@@ -187,4 +187,3 @@ def getFDValues(f):
 # print convertToSec(eigenmotions[0])
 # print convertToTimeStr(0,0,convertToSec(eigenmotions[0]))
 
-keylist,desclist,unitlist,newDict=getFDValues('reference.mat')
