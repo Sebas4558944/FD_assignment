@@ -78,20 +78,23 @@ C3S=np.matrix([[CXde],\
                 [0],\
                 [Cmde]])
 
-C1A=np.matrix([[(CYbdot-2*mub)*b/V0, 0, 0, 0],\
-                [0, -0.5*b/V0, 0, 0],\
-                [0, 0, -2*mub*KX2*(b/V0)**2, 2*mub*KXZ*(b/V0)**2],\
-                [Cnbdot*b/V0, 0, 2*mub*KXZ*(b/V0)**2, -2*mub*KZ2*(b/V0)**2]])
+C1A=np.matrix([[(CYbdot-2*mub)*b/V0, 0, 0, 0,0],\
+                [0, -0.5*b/V0, 0, 0,0],\
+                [0, 0, -2*mub*KX2*(b/V0)**2, 2*mub*KXZ*(b/V0)**2,0],\
+                [Cnbdot*b/V0, 0, 2*mub*KXZ*(b/V0)**2, -2*mub*KZ2*(b/V0)**2,0],\
+                [0,0,0,0,-0.5*b/V0]])
 
-C2A=np.matrix([[CYb, CL, CYp*b/(2*V0), (CYr-4*mub)*b/(2*V0)],\
-                [0, 0, b/(2*V0), 0],\
-                [Clb, 0, Clp*b/(2*V0), Clr*b/(2*V0)],\
-                [Cnb, 0, Cnp*b/(2*V0), Cnr*b/(2*V0)]])
+C2A=np.matrix([[CYb, CL, CYp*b/(2*V0), (CYr-4*mub)*b/(2*V0),0],\
+                [0, 0, b/(2*V0), 0,0],\
+                [Clb, 0, Clp*b/(2*V0), Clr*b/(2*V0),0],\
+                [Cnb, 0, Cnp*b/(2*V0), Cnr*b/(2*V0),0],\
+                [0,0,0,b/(2*V0),0]])
 
 C3A=np.matrix([[CYda,CYdr],\
                 [0,0],\
                 [Clda,Cldr],\
-                [Cnda,Cndr]])
+                [Cnda,Cndr],\
+                [0,0]])
 
 AS=np.linalg.inv(C1S)*-C2S
 BS=np.linalg.inv(C1S)*-C3S
@@ -105,6 +108,9 @@ BA=np.linalg.inv(C1A)*-C3A
 #Symmetric outputs -> u, theta
 #x=[u,a,theta,p]T
 #y=[u,theta]T
+#asymetric outputs -> psi, phi
+#x=[beta, psi, p,r,phi]
+#y=[psi, phi]
 
 CS=np.matrix([[1,0,0,0],\
               [0,0,1,0]])
@@ -112,8 +118,8 @@ CS=np.matrix([[1,0,0,0],\
 DS=np.zeros((2,1))
 
 
-CA=np.matrix(([1,0,0,0],\
-              [0,1,0,0]))
+CA=np.matrix(([0,1,0,0,0],\
+              [0,0,0,0,1]))
 
 DA=np.zeros((2,2))
 
