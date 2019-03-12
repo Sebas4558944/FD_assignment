@@ -6,6 +6,7 @@ Created on Wed Mar 06 09:10:19 2019
 """
 
 import numpy as np
+import mat4py
 from conversion_helpers import kts_to_ms,ft_to_m,lbs_to_kg
 f2m=ft_to_m
 l2k=lbs_to_kg
@@ -17,7 +18,7 @@ def importExcelData(f):
     # or standard units, default is false.
     
     arr=np.genfromtxt(f,delimiter=',',dtype='str')
-    return arr
+
     #y,x
     date_of_flight=arr[2,3] 
     flight_number=arr[3,3] 
@@ -42,7 +43,7 @@ def importExcelData(f):
     for l in (CL_CD_series1,CL_CD_series2):
         for i in range(len(l[:,0])):
             time=CL_CD_series1[i,0]
-            print time
+#            print time
     #Aircraft config
     ACC_Trim=arr[53,4]
     
@@ -77,20 +78,91 @@ def importExcelData(f):
     ACC_Trim, El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, \
     Cg_shift, eigenmotions
 
+ 
+def convertToSec(time):
+    splitTime=time.split(':')
+    if splitTime[2]=='00':
+        h=0
+        m=int(splitTime[0])
+        s=int(splitTime[1])
+    else:
+        h=int(splitTime[0])
+        m=int(splitTime[1])
+        s=int(splitTime[2])        
+    t=3600*h+60*m+s
+    return t
+
+def convertToTimeStr(h,m,s):
+    if int(s)>60:
+        unit=s%60
+        mchange=int(m)+(int(s)-unit)/(60)
+        s=int(s)-int(mchange)*60
+        m=int(m)+mchange
+
+    if int(m)>60:
+        unit=m%60
+        hchange=(int(m)-unit)/(60)
+        m=int(m)-int(hchange)*60
+        h=int(h)+hchange
+    
+    hstr=str(h)
+    mstr=str(m)
+    sstr=str(s)
+    if len(hstr)==1:
+        hstr='0'+hstr
+    if len(mstr)==1:
+        mstr='0'+mstr
+    if len(sstr)==1:
+        sstr='0'+sstr
+    
+    if int(h)==0:
+        timeStr=mstr+':'+sstr+':'+hstr
+    else:
+        timeStr=hstr+':'+mstr+':'+sstr
+
+    return timeStr
+
 
 def importFlightData(f):
-    import mat4py
     data=mat4py.loadmat(f)
     flightdata = data.get('flightdata',{})
     return flightdata
 
-def getValues(key):
-    keydict=flightdata.get(key,{})
-    #description units data
-    keydesc=keydict.get('description',{})
-    keyunits=keydict.get('units',{})
-    keydata=keydict.get('data',{})
-    return keydesc,keyunits,keydata
+def getFDValues(f):
+    data=mat4py.loadmat(f)
+    flightdata = data.get('flightdata',{})
+    keylist=[]
+    desclist=[]
+#    datlist=[]
+    unitlist=[]
+    newdict={}
+    for key in flightdata:
+        keydict=flightdata.get(key,{})
+        keydesc=keydict.get('description',{})
+        keydat=keydict.get('data',{})
+        keyunits=keydict.get('units',{})
+        keylist.append(key)
+        desclist.append(keydesc)
+#        datlist.append(keydat)
+        unitlist.append(keyunits)
+        newdict[key] = keydat
+    return keylist,desclist,unitlist,newdict
 
-flightdata=importFlightData('reference.mat')
-keys=flightdata.keys()
+
+
+    
+f='Reference_Datasheet.csv'
+date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
+, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
+ El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions\
+ = importExcelData(f)
+ 
+#print eigenmotions[0]
+#print convertToSec(eigenmotions[0])
+#print convertToTimeStr(0,0,convertToSec(eigenmotions[0]))
+
+#flightData=importFlightData('reference.mat')
+#keydict=flightData.get('Gps_long',{})
+#keydata=keydict.get('data',{})
+
+keylist,desclist,unitlist,newDict=getFDValues('reference.mat')
