@@ -58,7 +58,7 @@ def convertToTimeStr(h,m,s): #hh:mm:ss format
         sstr='0'+sstr
     
     if int(h)==0:
-        timeStr=mstr+':'+sstr+':'+hstr
+        timeStr=mstr+':'+sstr+':00'
     else:
         timeStr=hstr+':'+mstr+':'+sstr
 
