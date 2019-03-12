@@ -92,22 +92,30 @@ def convertToSec(time):
     t=3600*h+60*m+s
     return t
 
-def convertToTimeStr(h,m,s):
+def convertToTimeStr(h,m,s): #hh:mm:ss format
+#    s=s-s%0.1 #Get rid of anything smaller than 0.1
+    
     if int(s)>60:
         unit=s%60
         mchange=int(m)+(int(s)-unit)/(60)
         s=int(s)-int(mchange)*60
         m=int(m)+mchange
-
+        
     if int(m)>60:
         unit=m%60
         hchange=(int(m)-unit)/(60)
         m=int(m)-int(hchange)*60
         h=int(h)+hchange
     
+    #ensure no decimals
+    s=int(s)
+    m=int(m)
+    h=int(h)
+
     hstr=str(h)
     mstr=str(m)
     sstr=str(s)
+    
     if len(hstr)==1:
         hstr='0'+hstr
     if len(mstr)==1:
@@ -143,20 +151,20 @@ def getFDValues(f):
         keyunits=keydict.get('units',{})
         keylist.append(key)
         desclist.append(keydesc)
-#        datlist.append(keydat)
+#        datlist.append(keydat) #Costs comp time.
         unitlist.append(keyunits)
         newdict[key] = keydat
     return keylist,desclist,unitlist,newdict
 
 
 
-    
-f='Reference_Datasheet.csv'
-date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
-, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
- El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions\
- = importExcelData(f)
- 
+#    
+#f='Reference_Datasheet.csv'
+#date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
+#, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
+# El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions\
+# = importExcelData(f)
+# 
 #print eigenmotions[0]
 #print convertToSec(eigenmotions[0])
 #print convertToTimeStr(0,0,convertToSec(eigenmotions[0]))
@@ -165,4 +173,4 @@ date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
 #keydict=flightData.get('Gps_long',{})
 #keydata=keydict.get('data',{})
 
-keylist,desclist,unitlist,newDict=getFDValues('reference.mat')
+#keylist,desclist,unitlist,newDict=getFDValues('reference.mat')
