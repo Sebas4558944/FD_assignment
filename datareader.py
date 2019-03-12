@@ -8,9 +8,6 @@ Created on Wed Mar 06 09:10:19 2019
 import numpy as np
 import mat4py
 
-
-
- 
 def convertToSec(time):
     splitTime=time.split(':')
     try:
@@ -69,12 +66,12 @@ def convertToTimeStr(h,m,s): #hh:mm:ss format
 
 
 def importExcelData(f):
-    #f is filename
-    #Process defines wheter or not data is completed and converted to SI \
+    # f is filename
+    # Process defines wheter or not data is completed and converted to SI \
     # or standard units, default is false.
     
     arr=np.genfromtxt(f,delimiter=',',dtype='str')
-
+    
     #y,x
     date_of_flight=arr[2,3] 
     flight_number=arr[3,3] 
@@ -129,45 +126,99 @@ def importExcelData(f):
     spiral=arr[83,9]
     eigenmotions.extend((phugoid,shortPeriod,dutchRoll,dutchRollYD,aperRoll,spiral))
 
+    # y,x
+    date_of_flight = arr[2, 3]
+    flight_number = arr[3, 3]
+    TO_time = arr[2, 5]
+    LND_time = arr[3, 5]
+    # order = [p1,p2,coord,1L,1R,2L,2R,3L,3R]
+    passengerMass = arr[7:16, 7]  # in kg
+    passengerNames = arr[7:16, 3]
+    passengerPos = arr[7:16, 0]
+
+    blockfuel = arr[17, 3]  # in lbs
+    # Aircraft config
+    ACC_CLCD = arr[22, 4]
+
+    # time [min:sec], Elapsed time [sec] #empty, hp [ft] (pressure altitude)\
+    # IAS [kts], a [deg], FFL [lbs/hr], FFr [lbs/hr], F. used [lbs], TAT #C
+    CL_CD_series1 = arr[27:33, 1:9]
+    CL_CD_series2 = arr[43:49, 1:9]
+
+    # fill in ET
+    for l in (CL_CD_series1, CL_CD_series2):
+        for i in range(len(l[:, 0])):
+            time = CL_CD_series1[i, 0]
+    #            print time
+    # Aircraft config
+    ACC_Trim = arr[53, 4]
+
+    # time [hrs:min], Elapsed time [sec] #empty, hp [ft] (pressure altitude)\
+    # IAS [kts], a [deg], de [deg], detr [deg], Fe [N], FFL [lbs/hr], \
+    # FFr [lbs/hr], F. used [lbs], TAT #C
+    El_Trim_Curve = arr[58:64, 1:12]
+
+    # CG shift:
+    # _shifted all relates to moved person
+    name_shifted = arr[69, 1]
+    pos_shifted = arr[69, 1]
+    newpos_shifted = [70, 4]
+
+    # time [hrs:min], Elapsed time [sec] #empty, hp [ft] (pressure altitude)\
+    # IAS [kts], a [deg], de [deg], detr [deg], Fe [N], FFL [lbs/hr], \
+    # FFr [lbs/hr], F. used [lbs], TAT #C
+    Cg_shift = arr[74:75, 1:12]
+
+    # Eigenmotions
+    eigenmotions = []
+    phugoid = arr[82, 3]
+    shortPeriod = arr[83, 3]
+    dutchRoll = arr[82, 6]
+    dutchRollYD = arr[83, 6]
+    aperRoll = arr[82, 9]
+    spiral = arr[83, 9]
+    eigenmotions.extend((phugoid, shortPeriod, dutchRoll, dutchRollYD, aperRoll, spiral))
+
     return date_of_flight, flight_number, TO_time, LND_time, passengerMass, \
-    passengerNames, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2,\
-    ACC_Trim, El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, \
-    Cg_shift, eigenmotions
+           passengerNames, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, \
+           ACC_Trim, El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, \
+           Cg_shift, eigenmotions
 
 def importFlightData(f):
-    data=mat4py.loadmat(f)
-    flightdata = data.get('flightdata',{})
+    data = mat4py.loadmat(f)
+    flightdata = data.get('flightdata', {})
     return flightdata
 
+
 def getFDValues(f):
-    data=mat4py.loadmat(f)
-    flightdata = data.get('flightdata',{})
-    keylist=[]
-    desclist=[]
-#    datlist=[]
-    unitlist=[]
-    newdict={}
+    data = mat4py.loadmat(f)
+    flightdata = data.get('flightdata', {})
+    keylist = []
+    desclist = []
+    #    datlist=[]
+    unitlist = []
+    newdict = {}
     for key in flightdata:
-        keydict=flightdata.get(key,{})
-        keydesc=keydict.get('description',{})
-        keydat=keydict.get('data',{})
-        keyunits=keydict.get('units',{})
+        keydict = flightdata.get(key, {})
+        keydesc = keydict.get('description', {})
+        keydat = keydict.get('data', {})
+        keyunits = keydict.get('units', {})
         keylist.append(key)
         desclist.append(keydesc)
-#        datlist.append(keydat) #Costs comp time.
+        #        datlist.append(keydat) #Costs comp time.
         unitlist.append(keyunits)
         newdict[key] = keydat
-    return keylist,desclist,unitlist,newdict
+    return keylist, desclist, unitlist, newdict
 
 
 #%%
 #    Test functions
-    
-f='Reference_Datasheet.csv'
-date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
-, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
- El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions\
- = importExcelData(f)
+#    
+#f='Reference_Datasheet.csv'
+#date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
+#, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
+# El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions\
+# = importExcelData(f)
 # 
 #print eigenmotions[0]
 #print convertToSec(eigenmotions[0])
