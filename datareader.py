@@ -69,7 +69,9 @@ def importExcelData(f):
     # f is filename
     # Process defines wheter or not data is completed and converted to SI \
     # or standard units, default is false.
-
+    
+    arr=np.genfromtxt(f,delimiter=',',dtype='str')
+    
     #y,x
     date_of_flight=arr[2,3] 
     flight_number=arr[3,3] 
