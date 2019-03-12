@@ -114,7 +114,13 @@ def importExcelData(f):
     #IAS [kts], a [deg], de [deg], detr [deg], Fe [N], FFL [lbs/hr], \ 
     #FFr [lbs/hr], F. used [lbs], TAT #C
     El_Trim_Curve=arr[58:64,1:12]
+    El_Trim_Curvestr=arr_str[58:64,1:12]
     
+    #fill in ET
+    for i in range(len(El_Trim_Curve[:,0])):
+        time=convertToSec(El_Trim_Curvestr[i,0])
+        El_Trim_Curve[i,1]=int(time)
+        
     #CG shift: 
     #_shifted all relates to moved person
     name_shifted=arr_str[69,1]
