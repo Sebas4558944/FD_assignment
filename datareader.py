@@ -7,6 +7,7 @@ Created on Wed Mar 06 09:10:19 2019
 
 import numpy as np
 import mat4py
+import subprocess
 
 def convertToSec(time):
     splitTime=time.split(':')
@@ -172,6 +173,20 @@ def getFDValues(f):
         newdict[key] = keydat
     return keylist, desclist, unitlist, newdict
 
+
+def ThrustingAllDayEveryday(write):
+    #write - list of input variables to be written to matlab.dat
+    with open('matlab.dat', 'w') as f:
+        line=''
+        for i in write:
+            line+=str(i)+' '
+        f.write(line)
+        f.close
+    #Run exe
+    subprocess.call('thrust_new.exe')
+    #Read exe output
+    out=np.genfromtxt('thrust.dat')
+    return out
 
 #%%
 #    Test functions
