@@ -18,7 +18,7 @@ date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
 
 # eigenmotions - phugoid, short period, dutch roll,\
 # dutch roll Yd, aperiodic Roll, Spiral
-lengths = [200.,60.,60.,60.,60.,200.]
+lengths = [200.,60.,45.,30.,60.,200.]
 modes = ["Phugoid", "short period", "dutch roll","dutch roll Yd", "aperiodic Roll", "Spiral" ]
 plotting = [True, True, True, True, True, True]
 label_font = 20
