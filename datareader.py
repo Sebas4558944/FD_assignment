@@ -137,6 +137,12 @@ def importExcelData(f):
     #IAS [kts], a [deg], de [deg], detr [deg], Fe [N], FFL [lbs/hr], \
     #FFr [lbs/hr], F. used [lbs], TAT #C
     Cg_shift=arr[74:76,1:13]
+    Cg_shiftstr=arr_str[74:76,1:13]
+    #fill in ET
+    for i in range(len(Cg_shift[:,0])):
+        time=convertToSec(Cg_shiftstr[i,0])
+        Cg_shift[i,1]=int(time)
+        
 
     #Eigenmotions
     eigenmotions=[]

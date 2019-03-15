@@ -2,3 +2,7 @@
 \.idea/
 
 *.pyc
+
+matlab\.dat
+
+thrust\.dat
