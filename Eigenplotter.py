@@ -18,10 +18,12 @@ date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
 
 # eigenmotions - phugoid, short period, dutch roll,\
 # dutch roll Yd, aperiodic Roll, Spiral
-lengths = [200.,60.,40.,60.,60.,60.]
+lengths = [200.,60.,45.,30.,60.,200.]
 modes = ["Phugoid", "short period", "dutch roll","dutch roll Yd", "aperiodic Roll", "Spiral" ]
+plotting = [True, True, True, True, True, True]
 label_font = 20
 title_font = 25
+
 def time_stamps(n):
     #n is which eigenmode is to be plotted
     time_start = convertToSec(eigenmotions[n])
@@ -36,145 +38,260 @@ def time_stamps(n):
 time_list = newDict.get("time") 
 velocity_list = newDict.get("Dadc1_tas")
 altitude_list = newDict.get("Dadc1_alt")
-alpha_list = newDict.get("vane_AOA")
-roll_list = newDict.get("Ahrs1_Roll")
-yaw_list = newDict.get("Ahrs1_Pitch")
-
+if plotting[0] or plotting[1]:
+    alpha_list = newDict.get("vane_AOA")
+    elevator_list = newDict.get("delta_e")
+if plotting[2] or plotting[3]:
+    roll_list = newDict.get("Ahrs1_Roll")
+    yaw_list = newDict.get("Ahrs1_Pitch")
+    aileron_list = newDict.get("delta_a")
+    rudder_list = newDict.get("delta_r")
+if plotting[4] or plotting[5]:
+    roll_list = newDict.get("Ahrs1_Roll")
+    yaw_list = newDict.get("Ahrs1_Pitch")
+    aileron_list = newDict.get("delta_a")
+    rudder_list = newDict.get("delta_r")
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time
 n = 0
-indices = time_stamps(n)    
- 
-plt.figure()    
-ax1 = plt.subplot(311)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("True airspeed [m/s]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
-ax2 = plt.subplot(312, sharex = ax1)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("Pressure altitude [m]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
-ax3 = plt.subplot(313,sharex = ax1)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("angle of attack [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],alpha_list[indices[0]:indices[-1]])
+if plotting[n]:
+    indices = time_stamps(n)    
 
-plt.suptitle(modes[n], fontsize = title_font)  
-plt.show()
+    plt.figure()    
+    ax1 = plt.subplot(221)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("True airspeed [m/s]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
+    
+    ax2 = plt.subplot(222, sharex = ax1)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Pressure altitude [m]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
+    
+    ax3 = plt.subplot(223,sharex = ax1)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("angle of attack [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],alpha_list[indices[0]:indices[-1]])
+    
+    ax4 = plt.subplot(224,sharex = ax1)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Elevator deflection [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],elevator_list[indices[0]:indices[-1]])
+    
+    plt.suptitle(modes[n], fontsize = title_font)  
+    plt.show()
 
 ######short period (n=1): plotting speed, altitude and angle of attack against time 
 
 n=1
-indices = time_stamps(n)    
-       
-plt.figure()       
-plt.subplot(311)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("True airspeed [m/s]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
-plt.subplot(312)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("Pressure altitude [m]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
-plt.subplot(313)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("angle of attack [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],alpha_list[indices[0]:indices[-1]])
-plt.suptitle(modes[n], fontsize = title_font)  
-plt.show()
+if plotting[n]:
+    indices = time_stamps(n)    
+           
+    plt.figure()       
+    plt.subplot(221)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("True airspeed [m/s]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
+    
+    plt.subplot(222)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Pressure altitude [m]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
+    
+    plt.subplot(223)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("angle of attack [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],alpha_list[indices[0]:indices[-1]])
+    
+    plt.subplot(224)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Elevator deflection [deg]", fontsize = label_font)
+    
+    plt.plot(time_list[indices[0]:indices[-1]],elevator_list[indices[0]:indices[-1]])
+  
+    plt.suptitle(modes[n], fontsize = title_font)  
+    
+    plt.show()
 
 
 #####dutch roll (n=2): plot yaw angle, roll angle, altitude and true airspeed
 n=2
-indices = time_stamps(n)    
+if plotting[n]:
+    indices = time_stamps(n)    
        
-plt.figure()       
-plt.subplot(221)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("True airspeed [m/s]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
-plt.subplot(222)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("Pressure altitude [m]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
-plt.subplot(223)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("yaw angle [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],yaw_list[indices[0]:indices[-1]])
-plt.subplot(224)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("roll angle [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],roll_list[indices[0]:indices[-1]])
-plt.suptitle(modes[n], fontsize = title_font)  
-plt.show()
-
+    plt.figure()       
+    plt.subplot(321)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("True airspeed [m/s]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
+    
+    plt.subplot(322)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Pressure altitude [m]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
+    
+    plt.subplot(323)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("yaw angle [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],yaw_list[indices[0]:indices[-1]])
+    
+    plt.subplot(324)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("roll angle [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],roll_list[indices[0]:indices[-1]])
+    
+    plt.subplot(325)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Rudder deflection [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],rudder_list[indices[0]:indices[-1]])
+    
+    plt.subplot(326)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Aileron deflection [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],aileron_list[indices[0]:indices[-1]])
+    plt.suptitle(modes[n], fontsize = title_font)  
+    plt.show()
 #####dutch roll YD (n=3): plot yaw angle, roll angle, altitude and true airspeed
 n=3
-indices = time_stamps(n)    
+if plotting[n]:
+    indices = time_stamps(n)    
        
-plt.figure()       
-plt.subplot(221)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("True airspeed [m/s]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
-plt.subplot(222)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("Pressure altitude [m]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
-plt.subplot(223)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("yaw angle [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],yaw_list[indices[0]:indices[-1]])
-plt.subplot(224)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("roll angle [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],roll_list[indices[0]:indices[-1]])
-plt.suptitle(modes[n], fontsize = title_font)  
-plt.show()
+    plt.figure()       
+    plt.subplot(321)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("True airspeed [m/s]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
+    
+    plt.subplot(322)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Pressure altitude [m]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
+    
+    plt.subplot(323)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("yaw angle [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],yaw_list[indices[0]:indices[-1]])
+    
+    plt.subplot(324)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("roll angle [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],roll_list[indices[0]:indices[-1]])
+    
+    plt.subplot(325)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Rudder deflection [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],rudder_list[indices[0]:indices[-1]])
+    
+    plt.subplot(326)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Aileron deflection [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],aileron_list[indices[0]:indices[-1]])
+    plt.suptitle(modes[n], fontsize = title_font)  
+    plt.show()
 
 #####aperiodic roll (n=4): plot yaw angle, roll angle, altitude and true airspeed
 n=4
-indices = time_stamps(n)    
+if plotting[n]:
+    indices = time_stamps(n)    
        
-plt.figure()       
-plt.subplot(221)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("True airspeed [m/s]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
-plt.subplot(222)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("Pressure altitude [m]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
-plt.subplot(223)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("yaw angle [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],yaw_list[indices[0]:indices[-1]])
-plt.subplot(224)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("roll angle [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],roll_list[indices[0]:indices[-1]])
-plt.suptitle(modes[n], fontsize = title_font)  
-plt.show()
+    plt.figure()       
+    plt.subplot(321)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("True airspeed [m/s]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
+    
+    plt.subplot(322)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Pressure altitude [m]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
+    
+    plt.subplot(323)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("yaw angle [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],yaw_list[indices[0]:indices[-1]])
+    
+    plt.subplot(324)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("roll angle [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],roll_list[indices[0]:indices[-1]])
+    
+    plt.subplot(325)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Rudder deflection [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],rudder_list[indices[0]:indices[-1]])
+    
+    plt.subplot(326)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Aileron deflection [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],aileron_list[indices[0]:indices[-1]])
+    plt.suptitle(modes[n], fontsize = title_font)  
+    plt.show()
 
 #####spiral (n=5): plot yaw angle, roll angle, altitude and true airspeed
 n=5
-indices = time_stamps(n)    
+if plotting[n]:
+    indices = time_stamps(n)    
        
-plt.figure()       
-plt.subplot(221)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("True airspeed [m/s]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
-plt.subplot(222)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("Pressure altitude [m]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
-plt.subplot(223)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("yaw angle [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],yaw_list[indices[0]:indices[-1]])
-plt.subplot(224)
-plt.xlabel("time [sec]", fontsize = label_font)
-plt.ylabel("roll angle [deg]", fontsize = label_font)
-plt.plot(time_list[indices[0]:indices[-1]],roll_list[indices[0]:indices[-1]])
-plt.suptitle(modes[n], fontsize = title_font)  
-plt.show()
+    plt.figure()       
+    plt.subplot(321)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("True airspeed [m/s]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],velocity_list[indices[0]:indices[-1]])
+    
+    plt.subplot(322)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Pressure altitude [m]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],altitude_list[indices[0]:indices[-1]])
+    
+    plt.subplot(323)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("yaw angle [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],yaw_list[indices[0]:indices[-1]])
+    
+    plt.subplot(324)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("roll angle [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],roll_list[indices[0]:indices[-1]])
+    
+    plt.subplot(325)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Rudder deflection [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],rudder_list[indices[0]:indices[-1]])
+    
+    plt.subplot(326)
+    plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])
+    plt.xlabel("time [sec]", fontsize = label_font)
+    plt.ylabel("Aileron deflection [deg]", fontsize = label_font)
+    plt.plot(time_list[indices[0]:indices[-1]],aileron_list[indices[0]:indices[-1]])
+    plt.suptitle(modes[n], fontsize = title_font)  
+    plt.show()
