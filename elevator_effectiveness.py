@@ -69,7 +69,8 @@ def calc_Cm_alpha(derivative, Cm_delta):
 
     if Cm_alpha > 0:
         print "Warning: The aircraft is unstable, Cm_alpha = " + str(Cm_alpha)
-    return
+
+    return Cm_alpha
 
 
 f = 'Reference_Datasheet.csv'
@@ -81,14 +82,19 @@ El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions
 altitude = []
 elevator = []
 velocity = []
+temperature = []
 for i in range(len(Cg_shift)):
     altitude.append(Cg_shift[i][2] * ft_to_m)
     elevator.append(Cg_shift[i][5])
     velocity.append(Cg_shift[i][3] * kts_to_ms)
+    temperature.append(Cg_shift[i][11] + celsius_to_kelvin)
 
 reduced_calculator = Conditions(altitude[0])
 
 density = reduced_calculator.calc_density()
+mach = reduced_calculator.calc_mach(velocity[0])
+temp = reduced_calculator.calc_temperature(temperature[0], mach)
+speed_true = reduced_calculator.calc_V_t(temp, mach)
 delta_diff = elevator[1] - elevator[0]
 CN = calc_CN(7500 * g, density, velocity[0], S)
 dcm = calc_DCm(7.5, 8, CN, c)
@@ -96,6 +102,8 @@ cm_delta = calc_Cm_delta(delta_diff, dcm)
 cm_alpha = calc_Cm_alpha(calc_de_dalpha(El_Trim_Curve), cm_delta)
 
 print "Flying at an altitude of : " + str(altitude[0])
+print "Flying at a mach number of : " + str(mach)
+print "Flying with a speed of : " + str(speed_true)
 print "difference in elevator deflection : " + str(delta_diff)
 print "CN equals : " + str(CN)
 print "DCm equals : " + str(dcm)

@@ -48,6 +48,16 @@ class Conditions:
     def calc_V_e_reduced(self, V_e, W):
         return V_e * np.sqrt((self.W_S/W))
 
+    def calc_final(self, V_c, T_m):
+        mach = self.calc_mach(V_c)
+        temp = self.calc_temperature(T_m, mach)
+
+        V_t = self.calc_V_t(temp, mach)
+        V_e = self.calc_V_e(V_t)
+        V_e_reduced = self.calc_V_e_reduced(V_e)
+
+        return V_e_reduced
+
 
 # reducend_conditions = Conditions(5000)
 # pressure = reducend_conditions.calc_pressure()
