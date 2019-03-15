@@ -1,19 +1,23 @@
 from Cit_par import *
 from reduced_condition_calculator import Conditions
 from datareader import importExcelData
+from conversion_helpers import *
 
 import numpy as np
 import matplotlib.pyplot as plt
 import pylab
-
-reduction_calculator = Conditions(5000)
 
 Cm0 = 0.0297
 CNa = CNwa + CNha
 
 
 def calc_CN(weight, density, v, s):
-    return weight / (0.5 * density * (v ** 2) * s)
+    C_N = weight / (0.5 * density * (v ** 2) * s)
+
+    if C_N < 0:
+        print "Warning: The aircraft is unstable, C_N = " + str(C_N)
+
+    return C_N
 
 
 def calc_DCm(x_cg_2, x_cg_1, C_N, chord):
@@ -21,7 +25,11 @@ def calc_DCm(x_cg_2, x_cg_1, C_N, chord):
 
 
 def calc_Cm_delta(diff_delta, diff_Cm):
-    return -(diff_Cm / diff_delta)
+    Cm_delta = -(diff_Cm / diff_delta)
+
+    if Cm_delta > 0:
+        print "Warning: The aircraft is unstable, Cm_delta = " + str(Cm_delta)
+    return Cm_delta
 
 
 def calc_delta_reduced(delta_measured, Cm_delta, Tcs, Tc):
@@ -50,7 +58,18 @@ def calc_de_dalpha(trim_curve):
     pylab.plot(alpha, p(alpha), "b")
     plt.show()
 
+    if der > 0:
+        print "Warning: The aircraft is unstable, de_dalpha = " + str(der)
+
     return der
+
+
+def calc_Cm_alpha(derivative, Cm_delta):
+    Cm_alpha = -1 * derivative * Cm_delta
+
+    if Cm_alpha > 0:
+        print "Warning: The aircraft is unstable, Cm_alpha = " + str(Cm_alpha)
+    return
 
 
 f = 'Reference_Datasheet.csv'
@@ -59,5 +78,26 @@ date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames 
 El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
     = importExcelData(f)
 
-de_dalpha = calc_de_dalpha(El_Trim_Curve)
-print Cg_shift
+altitude = []
+elevator = []
+velocity = []
+for i in range(len(Cg_shift)):
+    altitude.append(Cg_shift[i][2] * ft_to_m)
+    elevator.append(Cg_shift[i][5])
+    velocity.append(Cg_shift[i][3] * kts_to_ms)
+
+reduced_calculator = Conditions(altitude[0])
+
+density = reduced_calculator.calc_density()
+delta_diff = elevator[1] - elevator[0]
+CN = calc_CN(7500 * g, density, velocity[0], S)
+dcm = calc_DCm(7.5, 8, CN, c)
+cm_delta = calc_Cm_delta(delta_diff, dcm)
+cm_alpha = calc_Cm_alpha(calc_de_dalpha(El_Trim_Curve), cm_delta)
+
+print "Flying at an altitude of : " + str(altitude[0])
+print "difference in elevator deflection : " + str(delta_diff)
+print "CN equals : " + str(CN)
+print "DCm equals : " + str(dcm)
+print "Cm_delta equals : " + str(cm_delta)
+print "Cm_alpha equals : " + str(cm_alpha)
