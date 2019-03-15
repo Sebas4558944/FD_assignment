@@ -12,9 +12,14 @@ def convertToSec(time):
     splitTime=time.split(':')
     try:
         if splitTime[2]=='00':
-            h=0
-            m=int(splitTime[0])
-            s=int(splitTime[1])
+            if splitTime[0]=='01':
+                h=int(splitTime[0])
+                m=int(splitTime[1])
+                s=int(splitTime[2])
+            else:
+                h=0
+                m=int(splitTime[0])
+                s=int(splitTime[1])
         else:
             h=int(splitTime[0])
             m=int(splitTime[1])
@@ -130,7 +135,7 @@ def importExcelData(f):
     #time [hrs:min], Elapsed time [sec] #empty, hp [ft] (pressure altitude)\
     #IAS [kts], a [deg], de [deg], detr [deg], Fe [N], FFL [lbs/hr], \
     #FFr [lbs/hr], F. used [lbs], TAT #C
-    Cg_shift=arr[74:75,1:12]
+    Cg_shift=arr[74:76,1:13]
 
     #Eigenmotions
     eigenmotions=[]
@@ -146,12 +151,6 @@ def importExcelData(f):
            passengerNames, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, \
            ACC_Trim, El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, \
            Cg_shift, eigenmotions
-
-def importFlightData(f):
-    data = mat4py.loadmat(f)
-    flightdata = data.get('flightdata', {})
-    return flightdata
-
 
 def getFDValues(f):
     data = mat4py.loadmat(f)
@@ -177,14 +176,16 @@ def getFDValues(f):
 #%%
 #    Test functions
 #    
-# f='Reference_Datasheet.csv'
-# date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
-# , passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
-#  El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
-#  = importExcelData(f)
+#f='Reference_Datasheet.csv'
+#date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
+#, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
+# El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
+# = importExcelData(f)
+
 
 # print eigenmotions[0]
 # print convertToSec(eigenmotions[0])
 # print convertToTimeStr(0,0,convertToSec(eigenmotions[0]))
 
 # keylist,desclist,unitlist,newDict=getFDValues('reference.mat')
+#print convertToSec("01:00:00")
