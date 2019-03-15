@@ -67,7 +67,7 @@ C1S=np.matrix([[-2*muc*c, 0, 0, 0, 0, 0 ,0, 0, 0, 0],\
                [0, (CZadot - 2 * muc) * c/V0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, c/V0, 0, 0, 0, 0, 0, 0, 0],\
                [0, Cmadot * c/V0, 0, -2*muc*KY2*(c/V0)**2, 0, 0, 0, 0, 0, 0],\
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
+               [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
@@ -78,7 +78,7 @@ C2S=np.matrix([[CXu*V0, CXa, CZ0 ,CXq * c/V0, 0, 0, 0, 0, 0, 0],\
                [CZu*V0, CZa, -CX0, (CZq+2*muc) * (c/V0), 0, 0, 0, 0, 0, 0],\
                [0 , 0 , 0,  c/V0, 0, 0, 0, 0, 0, 0],\
                [Cmu*V0, Cma, 0, Cmq*c/V0, 0, 0, 0, 0, 0, 0],\
-               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
+               [0, V0, -V0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
@@ -136,7 +136,6 @@ C3=np.matrix([[CXde, 0, 0],\
                [0, 0, 0],\
                [Cmde, 0, 0],\
                [0, 0, 0],\
-               [0, 0, 0],\
                [0, CYda, CYdr],\
                [0, 0, 0],\
                [0, Clda, Cldr],\
@@ -145,28 +144,22 @@ C3=np.matrix([[CXde, 0, 0],\
 C1=np.add(C1S,C1A)
 C2=np.add(C2S,C2A)
 
+A = np.linalg.inv(C1)*-C2
+B = np.linalg.inv(C1)*-C3
 #Outputs
-#Symmetric outputs -> u, theta
-#x=[u,a,theta,p]T
-#y=[u,theta]T
-#asymetric outputs -> psi, phi
-#x=[beta, psi, p,r,phi]
-#y=[psi, phi]
+#desired outputs:
+#y = [u,h,theta,psi,phi]  (all of which are states)
 #
-#CS=np.matrix([[1,0,0,0],\
-#              [0,0,1,0]])
-#
-#DS=np.zeros((2,1))
-#
-#
-#CA=np.matrix(([0,1,0,0,0],\
-#              [0,0,0,0,1]))
-#
-#DA=np.zeros((2,2))
+CS = np.matrix([[1,0,0,0,0,0,0,0,0,0],\
+                [0,0,0,0,1,0,0,0,0,0],\
+                [0,0,1,0,0,0,0,0,0,0],\
+                [0,0,0,0,0,0,1,0,0,0],\
+                [0,0,0,0,0,0,0,0,0,1]])
+DS = np.zeros((5,3))
 #
 ##init ss
-#SSS=co.ss(AS,BS,CS,DS)
-#SSA=co.ss(AA,BA,CA,DA)
+SSS=co.ss(A,B,CS,DS)
+
 
 
 
