@@ -124,8 +124,11 @@ def importExcelData(f):
     
     #fill in ET
     for i in range(len(El_Trim_Curve[:,0])):
-        time=convertToSec(El_Trim_Curvestr[i,0])
-        El_Trim_Curve[i,1]=int(time)
+        try:
+            time=convertToSec(El_Trim_Curvestr[i,0])
+            El_Trim_Curve[i,1]=int(time)
+        except:
+            pass
         
     #CG shift: 
     #_shifted all relates to moved person
@@ -203,6 +206,9 @@ def ThrustingAllDayEveryday(write):
 # El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
 # = importExcelData(f)
 
+import webbrowser  
+url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+webbrowser.open(url, new=0, autoraise=True)
 
 # print eigenmotions[0]
 # print convertToSec(eigenmotions[0])
