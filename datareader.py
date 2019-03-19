@@ -97,7 +97,7 @@ def importExcelData(f):
 
     #time [min:sec], Elapsed time [sec] #empty, hp [ft] (pressure altitude)\
     #IAS [kts], a [deg], FFL [lbs/hr], FFr [lbs/hr], F. used [lbs], TAT #C
-    CL_CD_series1=arr[27:33,1:9]
+    CL_CD_series1=arr[27:33,1:10]
     CL_CD_series1str=arr_str[27:33,1:9]
     CL_CD_series2=arr[43:49,1:9]
     CL_CD_series2str=arr_str[43:49,1:9]
@@ -206,9 +206,9 @@ def ThrustingAllDayEveryday(write):
 # El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
 # = importExcelData(f)
 
-import webbrowser  
-url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-webbrowser.open(url, new=0, autoraise=True)
+#import webbrowser  
+#url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+#webbrowser.open(url, new=0, autoraise=True)
 
 # print eigenmotions[0]
 # print convertToSec(eigenmotions[0])

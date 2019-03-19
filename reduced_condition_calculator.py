@@ -24,7 +24,7 @@ class Conditions:
         return self.rho0 * np.power((1 + (self.lambdas * self.h_p / self.T0)),
                                     (-(self.g0 / (self.lambdas * self.R) + 1)))
 
-    def calc_temperature(self, T_m, mach):
+    def calc_temperature(self, T_m, mach):  # Input in Kelvin!!
         return T_m / (1 + ((self.gamma - 1) / 2) * (mach ** 2))
 
     def calc_mach(self, V_c):
@@ -35,7 +35,7 @@ class Conditions:
         return np.sqrt(
             (2 / (self.gamma - 1)) * (np.power((1 + (self.p0 / p) * inner), ((self.gamma - 1) / self.gamma)) - 1))
 
-    def calc_V_t(self, temp, mach):
+    def calc_V_t(self, temp, mach):   # Input in Celsius!!
         temp += celsius_to_kelvin
         a = np.sqrt((self.gamma * self.R * temp))
 
