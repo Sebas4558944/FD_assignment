@@ -206,9 +206,9 @@ def ThrustingAllDayEveryday(write):
 # El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
 # = importExcelData(f)
 
-import webbrowser  
-url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-webbrowser.open(url, new=0, autoraise=True)
+#import webbrowser  
+#url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+#webbrowser.open(url, new=0, autoraise=True)
 
 # print eigenmotions[0]
 # print convertToSec(eigenmotions[0])
