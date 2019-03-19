@@ -47,7 +47,7 @@ def calc_de_dalpha(trim_curve):
         alpha.append(trim_curve[i][4])
         delta.append(trim_curve[i][5])
 
-    plt.scatter(alpha, delta)
+    # plt.scatter(alpha, delta)
 
     z = np.polyfit(alpha, delta, 1)
     p = np.poly1d(z)
@@ -75,6 +75,10 @@ def calc_Cm_alpha(derivative, Cm_delta):
 
 def calc_thrust_coefficient(thrust, s, v, density):
     return thrust / (0.5 * density * (v ** 2) * s)
+
+
+def calc_reduced_stick_force(w, w_s, force):
+    return force*(w_s/w)
 
 
 f = 'Reference_Datasheet.csv'
@@ -120,6 +124,9 @@ cm_delta = calc_Cm_delta(delta_diff, dcm)
 
 # ------------------------------------------------------------------------------------------
 delta_reduced = []
+speed_reduced = []
+alpha = []
+stick_force = []
 print El_Trim_Curve
 for i in range(len(El_Trim_Curve)):
     elevator_reduced = Conditions(El_Trim_Curve[i][2] * ft_to_m)
@@ -129,6 +136,10 @@ for i in range(len(El_Trim_Curve)):
     mach = elevator_reduced.calc_mach(El_Trim_Curve[i][3] * kts_to_ms)
     temp = elevator_reduced.calc_temperature(El_Trim_Curve[i][11], mach)
     speed_true = elevator_reduced.calc_V_t(temp, mach)
+    speed_equivalent = elevator_reduced.calc_final(El_Trim_Curve[i][3], El_Trim_Curve[i][11], 7500*g)
+
+    reduced_stick_force = calc_reduced_stick_force(7500*g, 60500, El_Trim_Curve[i][7])
+
     m_flow_l = El_Trim_Curve[i][8] * lbs_per_hour_to_kg_per_s
     m_flow_r = El_Trim_Curve[i][9] * lbs_per_hour_to_kg_per_s
 
@@ -140,6 +151,9 @@ for i in range(len(El_Trim_Curve)):
     T_non_standard = sum(ThrustingAllDayEveryday(thrust_non_standard))
     Tc = calc_thrust_coefficient(T_non_standard, S, speed_true, dens)
 
+    stick_force.append(reduced_stick_force)
+    alpha.append(El_Trim_Curve[i][4])
+    speed_reduced.append(speed_equivalent)
     delta_reduced.append((delta_e - (1 / cm_delta) * C_mtc * (Tcs - Tc)))
 
 slope = calc_de_dalpha(El_Trim_Curve)
@@ -170,3 +184,79 @@ print
 print
 
 print "The reduced elevator deflection equals : " + str(delta_reduced)
+print "The reduced equivalent airspeed equals : " + str(speed_reduced)
+print "The angle of attack equals : " + str(alpha)
+print "The reduced stick force equals : " + str(stick_force)
+
+z1 = np.polyfit(speed_reduced, delta_reduced, 2)
+p1 = np.poly1d(z1)
+
+z2 = np.polyfit(alpha, delta_reduced, 1)
+p2 = np.poly1d(z2)
+
+z3 = np.polyfit(speed_reduced, stick_force, 2)
+p3 = np.poly1d(z3)
+
+speed_reduced.sort()
+alpha.sort()
+
+plt.figure(1)
+pylab.plot(speed_reduced, p1(speed_reduced), "b")
+plt.gca().invert_yaxis()
+plt.xlabel("Reduced velocity")
+plt.ylabel("Reduced elevator deflection")
+plt.title("Elevator-trim curve")
+
+plt.figure(2)
+pylab.plot(alpha, p2(alpha), "b")
+plt.gca().invert_yaxis()
+plt.xlabel("Angle of attack")
+plt.ylabel("Reduced elevator deflection")
+plt.title("Angle plot")
+
+plt.figure(3)
+pylab.plot(speed_reduced, p3(speed_reduced), "b")
+plt.gca().invert_yaxis()
+plt.xlabel("Reduced velocity")
+plt.ylabel("Reduced stick-force")
+plt.title("Control-force curve")
+
+
+
+
+
+
+#
+# pylab.plot(alpha, p(alpha), "b")
+# plt.show()
+#
+# z = np.polyfit(speed_reduced, stick_force, 1)
+# p = np.poly1d(z)
+#
+# pylab.plot(speed_reduced, p(speed_reduced), "b")
+#
+# # speed_reduced.sort()
+# # delta_reduced.sort()
+# # stick_force.sort()
+# # alpha.sort()
+#
+# plt.figure(1)
+# plt.scatter(speed_reduced, stick_force)
+# plt.gca().invert_yaxis()
+# plt.xlabel("Reduced velocity")
+# plt.ylabel("Stick force")
+#
+# plt.figure(2)
+# plt.scatter(speed_reduced, delta_reduced)
+# plt.gca().invert_yaxis()
+# plt.xlabel("Reduced velocity")
+# plt.ylabel("Reduced elevator deflection")
+#
+# plt.figure(3)
+# plt.scatter(alpha, delta_reduced)
+# plt.gca().invert_yaxis()
+# plt.xlabel("Angle of attack")
+# plt.ylabel("Reduced elevator deflection")
+
+plt.show()
+
