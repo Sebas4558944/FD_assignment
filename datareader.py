@@ -205,7 +205,7 @@ def ThrustingAllDayEveryday(write):
 #, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
 # El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
 # = importExcelData(f)
-
+    
 #import webbrowser  
 #url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 #webbrowser.open(url, new=0, autoraise=True)

@@ -10,7 +10,7 @@ import numpy as np
 from Cit_par import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
 CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
-
+from scipy import roots
 
 #\theta=angle between X and horizontal
 #Dc,Db=Differnetial operator
@@ -107,7 +107,7 @@ C1A=np.matrix([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, -0.5*b/V0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, -2*mub*KX2*(b/V0)**2, 2*mub*KXZ*(b/V0)**2,0],\
                [0, 0, 0, 0, 0, Cnbdot*b/V0, 0, 2*mub*KXZ*(b/V0)**2, -2*mub*KZ2*(b/V0)**2,0],\
-               [0, 0, 0, 0, 0, 0, 0, 0, 0,-0.5*b/V0]])
+               [0, 0, 0, 0, 0, 0, 0, 0, 0,1]])
 
 C2A=np.matrix([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
@@ -118,7 +118,7 @@ C2A=np.matrix([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, b/(2*V0), 0, 0],\
                [0, 0, 0, 0, 0, Clb, 0, Clp*b/(2*V0), Clr*b/(2*V0), 0],\
                [0, 0, 0, 0, 0, Cnb, 0, Cnp*b/(2*V0), Cnr*b/(2*V0), 0],\
-               [0, 0, 0, 0, 0, 0, 0, 0, b/(2*V0), 0]])
+               [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]])
 
 C3A=np.matrix([[0,0],\
                [0,0],\
@@ -162,6 +162,7 @@ DS = np.zeros((5,3))
 ##init ss
 SSS=co.ss(A,B,CS,DS)
 
+h = co.tf(SSS)
 
 #print eigenvalues A matrix
 eigenvals, eigenvectors = np.linalg.eig(A)
@@ -191,7 +192,7 @@ theta = response[:,2]
 psi = response[:,3]
 phi = response[:,4]
 
-
+plt.figure()
 plt.subplot(231)
 plt.xlabel("Time [sec]", fontsize = label_font)
 plt.ylabel("Velocity [m/s]", fontsize = label_font)
