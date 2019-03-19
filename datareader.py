@@ -122,6 +122,14 @@ def importExcelData(f):
     El_Trim_Curve=arr[58:65,1:13]
     El_Trim_Curvestr=arr_str[58:65,1:13]
     
+    fixed=False
+    #shorten!
+    while fixed==False:
+        if str(El_Trim_Curve[-1,11])=='nan':
+            El_Trim_Curve=El_Trim_Curve[:][:-1]
+        else:
+            fixed=True
+            
     #fill in ET
     for i in range(len(El_Trim_Curve[:,0])):
         try:
@@ -207,10 +215,10 @@ def fixList(fixthislist):
 #    Test functions
 #    
 #f='Reference_Datasheet.csv'
-#date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
-#, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
-# El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
-# = importExcelData(f)
+date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
+, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
+ El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
+ = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')
     
 #import webbrowser  
 #url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
