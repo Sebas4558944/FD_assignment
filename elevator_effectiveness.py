@@ -130,11 +130,13 @@ alpha = []
 stick_force = []
 print El_Trim_Curve
 for i in range(len(El_Trim_Curve)):
+#    if str(El_Trim_Curve[i][2]).isdigit()
     elevator_reduced = Conditions(El_Trim_Curve[i][2] * ft_to_m)
     delta_e = El_Trim_Curve[i][5]
 
     dens = elevator_reduced.calc_density()
     mach = elevator_reduced.calc_mach(El_Trim_Curve[i][3] * kts_to_ms)
+    #Temperature difference?
     temp = elevator_reduced.calc_temperature(El_Trim_Curve[i][11], mach)
     speed_true = elevator_reduced.calc_V_t(temp, mach)
     speed_equivalent = elevator_reduced.calc_final(El_Trim_Curve[i][3], El_Trim_Curve[i][11], 7500*g)

@@ -98,9 +98,9 @@ def importExcelData(f):
     #time [min:sec], Elapsed time [sec] #empty, hp [ft] (pressure altitude)\
     #IAS [kts], a [deg], FFL [lbs/hr], FFr [lbs/hr], F. used [lbs], TAT #C
     CL_CD_series1=arr[27:33,1:10]
-    CL_CD_series1str=arr_str[27:33,1:9]
-    CL_CD_series2=arr[43:49,1:9]
-    CL_CD_series2str=arr_str[43:49,1:9]
+    CL_CD_series1str=arr_str[27:33,1:10]
+    CL_CD_series2=arr[43:49,1:10]
+    CL_CD_series2str=arr_str[43:49,1:10]
     
     
     #fill in ET
@@ -122,6 +122,14 @@ def importExcelData(f):
     El_Trim_Curve=arr[58:65,1:13]
     El_Trim_Curvestr=arr_str[58:65,1:13]
     
+    fixed=False
+    #shorten!
+    while fixed==False:
+        if str(El_Trim_Curve[-1,11])=='nan':
+            El_Trim_Curve=El_Trim_Curve[:][:-1]
+        else:
+            fixed=True
+            
     #fill in ET
     for i in range(len(El_Trim_Curve[:,0])):
         try:
@@ -197,14 +205,20 @@ def ThrustingAllDayEveryday(write):
     out=np.genfromtxt('thrust.dat')
     return out
 
+def fixList(fixthislist):
+    fixed=[]
+    for i in range(len(fixthislist)):
+        fixed.append(fixthislist[i][0])
+    return fixed
+
 #%%
 #    Test functions
 #    
 #f='Reference_Datasheet.csv'
-#date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
-#, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
-# El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
-# = importExcelData(f)
+date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
+, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
+ El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
+ = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')
     
 #import webbrowser  
 #url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'

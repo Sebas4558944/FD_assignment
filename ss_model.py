@@ -171,20 +171,131 @@ print eigenvals
 label_font = 20
 title_font = 25
 
-#inital value problem 
-T = np.linspace(0,100,1000)
-X0 = np.matrix([[0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0]])
+#############################inital value problem ################################
+#T = np.linspace(0,100,1000)
+#X0 = np.matrix([[0],\
+#                [0],\
+#                [0],\
+#                [0],\
+#                [0],\
+#                [0],\
+#                [0],\
+#                [0],\
+#                [0],\
+#                [0]])
+#
+#response, T = co.initial(SSS, T = T,X0 = X0)
+##plotting u,h,theta,psi,phi
+#u = response[:,0]
+#h = response[:,1]
+#theta = response[:,2]
+#psi = response[:,3]
+#phi = response[:,4]
+#
+#plt.figure()
+#plt.subplot(231)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Velocity [m/s]", fontsize = label_font)
+#plt.plot(T,u)
+#
+#plt.subplot(232)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Altitude [m]", fontsize = label_font)
+#plt.plot(T,h)
+#
+#plt.subplot(233)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Pitch angle [rad]", fontsize = label_font)
+#plt.plot(T,theta)
+#
+#plt.subplot(234)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Roll angle [rad]", fontsize = label_font)
+#plt.plot(T,psi)
+#
+#plt.subplot(235)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Yaw angle [rad]", fontsize = label_font)
+#plt.plot(T,phi)
+#plt.show()
 
-response, T = co.initial(SSS, T = T,X0 = X0)
+#################response to impulse on control vector#####################
+#steps = 1000
+#tmax = 100 
+#T = np.linspace(0,tmax,steps)
+#
+##create impulse vector for t = 0 
+#u = []
+##[de,da,dr]
+#u_impulse = [0.,0.,1.]
+#u.append(u_impulse)
+#
+##move forcing to 0 for anything past the initial input
+#for i in range(steps-1):
+#    u.append([0.,0.,0.])
+#u = np.array(u)
+#
+##calculate response
+#response, T, state = co.lsim(SSS, T = T,U = u)
+#
+##plotting u,h,theta,psi,phi
+#u = response[:,0]
+#h = response[:,1]
+#theta = response[:,2]
+#psi = response[:,3]
+#phi = response[:,4]
+#
+#plt.figure()
+#plt.subplot(231)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Velocity [m/s]", fontsize = label_font)
+#plt.plot(T,u)
+#
+#plt.subplot(232)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Altitude [m]", fontsize = label_font)
+#plt.plot(T,h)
+#
+#plt.subplot(233)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Pitch angle [rad]", fontsize = label_font)
+#plt.plot(T,theta)
+#
+#plt.subplot(234)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Roll angle [rad]", fontsize = label_font)
+#plt.plot(T,psi)
+#
+#plt.subplot(235)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Yaw angle [rad]", fontsize = label_font)
+#plt.plot(T,phi)
+#plt.show()
+
+
+#############step input from t=0 to t=tstep ###################
+steps = 1000
+tmax = 100. 
+tstep = 10.
+nstep = tstep/(tmax/float(steps))
+T = np.linspace(0,tmax,steps)
+
+#create impulse vector for t = 0 
+u_input = []
+#[de,da,dr]
+u_val = [0.,0.,0.]
+
+#move forcing to 0 for anything past the initial input
+for i in range(steps):
+    if i<=nstep:
+        u_input.append(u_val)
+    elif i>nstep:
+        u_input.append([0.,0.,0.])
+u_input = np.array(u_input)
+
+#calculate response
+response, T, state = co.lsim(SSS, T = T,U = u_input)
+
 #plotting u,h,theta,psi,phi
 u = response[:,0]
 h = response[:,1]
