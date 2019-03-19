@@ -82,10 +82,11 @@ def calc_reduced_stick_force(w, w_s, force):
 
 
 f = 'Reference_Datasheet.csv'
+f2 = 'Post_Flight_Datasheet_13_03_V2.csv'
 date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames \
     , passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim, \
 El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
-    = importExcelData(f)
+    = importExcelData(f2)
 
 altitude = []
 elevator = []
@@ -179,15 +180,6 @@ print "DCm equals : " + str(dcm)
 print "Cm_delta equals : " + str(cm_delta)
 print "Cm_alpha equals : " + str(cm_alpha)
 
-print
-print
-print
-
-print "The reduced elevator deflection equals : " + str(delta_reduced)
-print "The reduced equivalent airspeed equals : " + str(speed_reduced)
-print "The angle of attack equals : " + str(alpha)
-print "The reduced stick force equals : " + str(stick_force)
-
 z1 = np.polyfit(speed_reduced, delta_reduced, 2)
 p1 = np.poly1d(z1)
 
@@ -220,43 +212,6 @@ plt.gca().invert_yaxis()
 plt.xlabel("Reduced velocity")
 plt.ylabel("Reduced stick-force")
 plt.title("Control-force curve")
-
-
-
-
-
-
-#
-# pylab.plot(alpha, p(alpha), "b")
-# plt.show()
-#
-# z = np.polyfit(speed_reduced, stick_force, 1)
-# p = np.poly1d(z)
-#
-# pylab.plot(speed_reduced, p(speed_reduced), "b")
-#
-# # speed_reduced.sort()
-# # delta_reduced.sort()
-# # stick_force.sort()
-# # alpha.sort()
-#
-# plt.figure(1)
-# plt.scatter(speed_reduced, stick_force)
-# plt.gca().invert_yaxis()
-# plt.xlabel("Reduced velocity")
-# plt.ylabel("Stick force")
-#
-# plt.figure(2)
-# plt.scatter(speed_reduced, delta_reduced)
-# plt.gca().invert_yaxis()
-# plt.xlabel("Reduced velocity")
-# plt.ylabel("Reduced elevator deflection")
-#
-# plt.figure(3)
-# plt.scatter(alpha, delta_reduced)
-# plt.gca().invert_yaxis()
-# plt.xlabel("Angle of attack")
-# plt.ylabel("Reduced elevator deflection")
 
 plt.show()
 
