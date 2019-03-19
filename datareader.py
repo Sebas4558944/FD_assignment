@@ -97,10 +97,10 @@ def importExcelData(f):
 
     #time [min:sec], Elapsed time [sec] #empty, hp [ft] (pressure altitude)\
     #IAS [kts], a [deg], FFL [lbs/hr], FFr [lbs/hr], F. used [lbs], TAT #C
-    CL_CD_series1=arr[27:33,1:9]
-    CL_CD_series1str=arr_str[27:33,1:9]
-    CL_CD_series2=arr[43:49,1:9]
-    CL_CD_series2str=arr_str[43:49,1:9]
+    CL_CD_series1=arr[27:33,1:10]
+    CL_CD_series1str=arr_str[27:33,1:10]
+    CL_CD_series2=arr[43:49,1:10]
+    CL_CD_series2str=arr_str[43:49,1:10]
     
     
     #fill in ET
@@ -196,6 +196,12 @@ def ThrustingAllDayEveryday(write):
     #Read exe output
     out=np.genfromtxt('thrust.dat')
     return out
+
+def fixList(fixthislist):
+    fixed=[]
+    for i in range(len(fixthislist)):
+        fixed.append(fixthislist[i][0])
+    return fixed
 
 #%%
 #    Test functions
