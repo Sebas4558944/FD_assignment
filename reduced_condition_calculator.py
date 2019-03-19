@@ -1,6 +1,7 @@
 from Cit_par import *
 
 import numpy as np
+from conversion_helpers import *
 
 
 class Conditions:
@@ -35,8 +36,8 @@ class Conditions:
             (2 / (self.gamma - 1)) * (np.power((1 + (self.p0 / p) * inner), ((self.gamma - 1) / self.gamma)) - 1))
 
     def calc_V_t(self, temp, mach):
+        temp += celsius_to_kelvin
         a = np.sqrt((self.gamma * self.R * temp))
-        print "the speed of sound equals : " + str(a)
 
         return mach * a
 

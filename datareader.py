@@ -119,13 +119,16 @@ def importExcelData(f):
     #time [hrs:min], Elapsed time [sec] #empty, hp [ft] (pressure altitude)\
     #IAS [kts], a [deg], de [deg], detr [deg], Fe [N], FFL [lbs/hr], \
     #FFr [lbs/hr], F. used [lbs], TAT #C
-    El_Trim_Curve=arr[58:65,1:12]
-    El_Trim_Curvestr=arr_str[58:65,1:12]
+    El_Trim_Curve=arr[58:65,1:13]
+    El_Trim_Curvestr=arr_str[58:65,1:13]
     
     #fill in ET
     for i in range(len(El_Trim_Curve[:,0])):
-        time=convertToSec(El_Trim_Curvestr[i,0])
-        El_Trim_Curve[i,1]=int(time)
+        try:
+            time=convertToSec(El_Trim_Curvestr[i,0])
+            El_Trim_Curve[i,1]=int(time)
+        except:
+            pass
         
     #CG shift: 
     #_shifted all relates to moved person
@@ -189,7 +192,7 @@ def ThrustingAllDayEveryday(write):
         f.write(line)
         f.close
     #Run exe
-    subprocess.call('thrust_new.exe')
+    run = subprocess.call('thrust_new.exe')
     #Read exe output
     out=np.genfromtxt('thrust.dat')
     return out
@@ -203,6 +206,9 @@ def ThrustingAllDayEveryday(write):
 # El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
 # = importExcelData(f)
 
+import webbrowser  
+url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+webbrowser.open(url, new=0, autoraise=True)
 
 # print eigenmotions[0]
 # print convertToSec(eigenmotions[0])

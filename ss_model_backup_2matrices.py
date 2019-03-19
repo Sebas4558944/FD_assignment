@@ -10,7 +10,7 @@ import numpy as np
 from Cit_par import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
 CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr
-
+import matplotlib.pyplot as plt
 
 #\theta=angle between X and horizontal
 #Dc,Db=Differnetial operator
@@ -129,3 +129,49 @@ SSA=co.ss(AA,BA,CA,DA)
 
 
 
+#print eigenvalues A matrix
+eigenvalsAS = scipy.linalg.eigvals(AS)
+#eigenvalsAA, eigenvectors = np.linalg.eig(AA)
+print eigenvalsAS#, eigenvalsAA
+#######plotting responses
+label_font = 20
+title_font = 25
+
+#inital value problem 
+T = np.linspace(0,100,1000)
+X0 = np.matrix([[0],\
+                [0],\
+                [0],\
+                [0]])
+
+response, T = co.initial(SSS, T = T,X0 = X0)
+#plotting u,h,theta,psi,phi
+u = response[:,0]
+theta = response[:,1]
+
+
+plt.subplot(231)
+plt.xlabel("Time [sec]", fontsize = label_font)
+plt.ylabel("Velocity [m/s]", fontsize = label_font)
+plt.plot(T,u)
+#
+#plt.subplot(232)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Altitude [m]", fontsize = label_font)
+#plt.plot(T,h)
+
+plt.subplot(233)
+plt.xlabel("Time [sec]", fontsize = label_font)
+plt.ylabel("Pitch angle [rad]", fontsize = label_font)
+plt.plot(T,theta)
+
+#plt.subplot(234)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Roll angle [rad]", fontsize = label_font)
+#plt.plot(T,psi)
+#
+#plt.subplot(235)
+#plt.xlabel("Time [sec]", fontsize = label_font)
+#plt.ylabel("Yaw angle [rad]", fontsize = label_font)
+#plt.plot(T,phi)
+plt.show()

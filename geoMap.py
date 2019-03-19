@@ -13,7 +13,7 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
 
-keylist,desclist,unitlist,newDict=getFDValues('reference.mat')
+keylist,desclist,unitlist,newDict=getFDValues('FlightData.mat')
 
 time=newDict.get('time')
 lat=newDict.get('Gps_lat')
@@ -56,7 +56,7 @@ if plotSchematic:
     x,y=m(lonnew,latnew)                  
     m.plot(x,y,color='red')
 
-plot3Dline=False
+plot3Dline=True
 if plot3Dline:
     R=6371*10^3
     xs=[]
