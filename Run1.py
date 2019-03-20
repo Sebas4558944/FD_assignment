@@ -6,7 +6,7 @@
 from math import *
 from matplotlib import pyplot as plt
 from datareader import *
-from Cit_par import S, g, A
+from Cit_par import S, g, A, c
 from conversion_helpers import lbs_to_kg, lbs_per_hour_to_kg_per_s, celsius_to_kelvin, kts_to_ms, ft_to_m
 from elevator_effectiveness import Elevator, calc_weight
 
@@ -19,7 +19,6 @@ CL_CD_series1 = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')[9]
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 weight_zero = (9165. + 2800. + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 80.)
-
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 #                               CL calculations
@@ -38,10 +37,13 @@ def CL(CL_CD_series1, start_weight, s):
     fuel_used = CL_CD_series1[:, 7] * lbs_to_kg
     weight = calc_weight(start_weight, fuel_used)
 
+    mu = 1.6e-5
     Cl = []
     Cd = []
     x = []
     delta_t = []
+    Mach = []
+    Rey = []
 
     for k in range(len(altitude)):
         # Find the true airspeed [m/s]
@@ -51,7 +53,7 @@ def CL(CL_CD_series1, start_weight, s):
 
         true_speed = elevator.true_airspeed
         density = elevator.density
-
+        Rey.append(density * true_speed * c / mu)
         # Calculate CL for each time interval (and convert mass [kg] to weight [N])
         non_standard_input = [elevator.altitude, elevator.mach, delta_t[k], m_flow_l[k], m_flow_r[k]]
         thrust = sum(ThrustingAllDayEveryday(non_standard_input))
@@ -60,7 +62,11 @@ def CL(CL_CD_series1, start_weight, s):
 
         Cd.append(2 * thrust / (density * S * true_speed ** 2))
         x.append(Cl[k] ** 2)
-
+        
+        # Get Mach numbers at measurements
+        Mach.append(elevator.calc_mach(calibrated_speed[k]))
+    #print "Mach range is", Mach
+    print "Reynolds range is", Rey
     # Output: array with CL values at each time interval
     # Obtain slope of CD CL^2 diagram to find the Oswald factor
     slope = np.polyfit(x, Cd, 1, full=False)[0]
@@ -95,12 +101,12 @@ def Plots(Cl, Cd, alpha):
     plt.ylabel('CD [-]')
     plt.show()
 
-    # Plot CD against CL
+    # Plot CL against CD
     plt.figure()
-    plt.plot(Cl, Cd)
-    plt.title('CD-CL')
-    plt.xlabel('CL [-]')
-    plt.ylabel('CD [-]')
+    plt.plot(Cd, Cl)
+    plt.title('CL-CD')
+    plt.xlabel('CD [-]')
+    plt.ylabel('CL [-]')
     plt.show()
     return
 
