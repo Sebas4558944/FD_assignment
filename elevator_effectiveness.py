@@ -2,7 +2,6 @@ from Cit_par import *
 from reduced_condition_calculator import Conditions
 from datareader import importExcelData, ThrustingAllDayEveryday
 from conversion_helpers import *
-from Run1 import weight, f_used_trim
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -38,7 +37,7 @@ class Elevator(Conditions):
         return self.reduced_airspeed
 
     def calc_temperature_difference(self):
-        return self.temperature - self.T0 + (self.lambdas * self.altitude)
+        return self.temperature - (self.T0 + (self.lambdas * self.altitude))
 
     def calc_c_n(self):
         self.c_n = self.weight / (0.5 * self.density * (self.true_airspeed ** 2) * self.s)
@@ -119,6 +118,16 @@ def calc_d_e_d_alpha(trim_curve_data):
     return derivative
 
 
+def calc_weight(start_weight, fuel_used):
+    weights = [start_weight]
+
+    for i in range(1, len(fuel_used)):
+        weight_left = weights[i - 1] + float(fuel_used[i])
+        weights.append(weight_left)
+
+    return weights
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 f_1 = 'Reference_Datasheet.csv'
@@ -129,7 +138,7 @@ CL_CD_series1, CL_CD_series2, ACC_Trim, El_Trim_Curve, name_shifted, pos_shifted
 eigenmotions = importExcelData(f_1)
 
 # ----------------------------------------------------------------------------------------------------------------------
-cg_weight = weight(15000, [1053])
+cg_weight = calc_weight(15000, [1053])
 elevator_effectiveness = Elevator(Cg_shift[0][2] * ft_to_m, Cg_shift[0][3] * kts_to_ms,
                                   Cg_shift[0][11] + celsius_to_kelvin, cg_weight[0])
 
@@ -148,7 +157,8 @@ delta = []
 speed = []
 alpha = []
 stick_force = []
-weights = weight(15000, f_used_trim)
+weight_values = calc_weight((9165. + 2800. + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 80.),
+                            list(El_Trim_Curve[:, -2]))
 
 for j in range(len(El_Trim_Curve)):
     m_flow_l = El_Trim_Curve[j][8] * lbs_per_hour_to_kg_per_s
@@ -156,7 +166,7 @@ for j in range(len(El_Trim_Curve)):
     delta_r = elevator_effectiveness.calc_reduced_delta(El_Trim_Curve[j][5], m_flow_l, m_flow_r)
 
     reducing_elevator = Elevator(El_Trim_Curve[j][2] * ft_to_m, El_Trim_Curve[j][3] * kts_to_ms,
-                                 El_Trim_Curve[j][11] + celsius_to_kelvin, 7500*g)  # weights[j])
+                                 El_Trim_Curve[j][11] + celsius_to_kelvin, 7500 * g)  # weight_values[j])
 
     airspeed = reducing_elevator.get_reduced_equivalent_airspeed()
     stick_force_reduced = reducing_elevator.calc_reduced_stick_force(El_Trim_Curve[j][7])
@@ -167,47 +177,47 @@ for j in range(len(El_Trim_Curve)):
     delta.append(delta_r)
 
 # ----------------------------------------------------------------------------------------------------------------------
-
-print "c_n equals : " + str(c_n)
-print "cm_delta equals : " + str(cm_delta)
-print "cm_alpha equals : " + str(cm_alpha)
-print "The weights are : " + str(weights)
-print "The airspeed is : " + str(speed)
-print "The angle of attack is : " + str(alpha)
-print "The elevator angle is : " + str(newpos_shifted)
-print "The stick force is : " + str(pos_shifted)
-
-z1 = np.polyfit(speed, delta, 2)
-p1 = np.poly1d(z1)
-
-z2 = np.polyfit(alpha, delta, 1)
-p2 = np.poly1d(z2)
-
-z3 = np.polyfit(speed, stick_force, 3)
-p3 = np.poly1d(z3)
-
-speed.sort()
-alpha.sort()
-
-plt.figure(1)
-pylab.plot(speed, p1(speed), "b")
-plt.gca().invert_yaxis()
-plt.xlabel("Reduced velocity")
-plt.ylabel("Reduced elevator deflection")
-plt.title("Elevator-trim curve")
-
-plt.figure(2)
-pylab.plot(alpha, p2(alpha), "b")
-plt.gca().invert_yaxis()
-plt.xlabel("Angle of attack")
-plt.ylabel("Reduced elevator deflection")
-plt.title("Angle plot")
-
-plt.figure(3)
-pylab.plot(speed, p3(speed), "b")
-plt.gca().invert_yaxis()
-plt.xlabel("Reduced velocity")
-plt.ylabel("Reduced stick-force")
-plt.title("Control-force curve")
-
-plt.show()
+#
+# print "c_n equals : " + str(c_n)
+# print "cm_delta equals : " + str(cm_delta)
+# print "cm_alpha equals : " + str(cm_alpha)
+# print "The weights are : " + str(weight_values)
+# print "The airspeed is : " + str(speed)
+# print "The angle of attack is : " + str(alpha)
+# print "The elevator angle is : " + str(delta)
+# print "The stick force is : " + str(stick_force)
+#
+# z1 = np.polyfit(speed, delta, 2)
+# p1 = np.poly1d(z1)
+#
+# z2 = np.polyfit(alpha, delta, 1)
+# p2 = np.poly1d(z2)
+#
+# z3 = np.polyfit(speed, stick_force, 3)
+# p3 = np.poly1d(z3)
+#
+# speed.sort()
+# alpha.sort()
+#
+# plt.figure(1)
+# pylab.plot(speed, p1(speed), "b")
+# plt.gca().invert_yaxis()
+# plt.xlabel("Reduced velocity")
+# plt.ylabel("Reduced elevator deflection")
+# plt.title("Elevator-trim curve")
+#
+# plt.figure(2)
+# pylab.plot(alpha, p2(alpha), "b")
+# plt.gca().invert_yaxis()
+# plt.xlabel("Angle of attack")
+# plt.ylabel("Reduced elevator deflection")
+# plt.title("Angle plot")
+#
+# plt.figure(3)
+# pylab.plot(speed, p3(speed), "b")
+# plt.gca().invert_yaxis()
+# plt.xlabel("Reduced velocity")
+# plt.ylabel("Reduced stick-force")
+# plt.title("Control-force curve")
+#
+# plt.show()
