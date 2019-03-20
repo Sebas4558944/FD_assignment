@@ -5,7 +5,7 @@ Created on Wed Mar 06 09:47:34 2019
 @author: msjor
 """
 #from conversion_helpers import *
-from Cit_par import gamma,Temp0,R,rho0,lambdas,g,P0
+from Cit_par_testing import gamma,Temp0,R,rho0,lambdas,g,P0
 import numpy as np
 
 
