@@ -24,18 +24,18 @@ Cmde = -1.553  # elevator effectiveness [ ]
 
 # Aircraft geometry
 
-S = 24.200  # wing area [m^2]
-Sh = 0.2 * S  # stabiliser area [m^2]
-Sh_S = Sh / S  # [ ]
-lh =5.5  # tail length [m]
+#S = 24.200  # wing area [m^2]
+#Sh = 0.2 * S  # stabiliser area [m^2]
+#Sh_S = Sh / S  # [ ]
+#lh =5.5  # tail length [m]
 c = 2.022  # mean aerodynamic cord [m]
-lh_c = lh / c  # [ ]
+#lh_c = lh / c  # [ ]
 b = 13.36  # wing span [m]
-bh = 5.791  # stabilser span [m]
-A = b ** 2 / S  # wing aspect ratio [ ]
-Ah = bh ** 2 / Sh  # stabilser aspect ratio [ ]
-Vh_V = 1  # [ ]
-ih = -2 * pi / 180  # stabiliser angle of incidence [rad]
+#bh = 5.791  # stabilser span [m]
+#A = b ** 2 / S  # wing aspect ratio [ ]
+#Ah = bh ** 2 / Sh  # stabilser aspect ratio [ ]
+#Vh_V = 1  # [ ]
+#ih = -2 * pi / 180  # stabiliser angle of incidence [rad]
 
 # Constant values concerning atmosphere and gravity
 
@@ -64,13 +64,13 @@ KY2 = 0.98
 
 Cmac = 0  # Moment coefficient about the aerodynamic centre [ ]
 CNwa = CLa  # Wing normal force slope [ ]
-CNha = 2 * pi * Ah / (Ah + 2)  # Stabiliser normal force slope [ ]
-depsda = 4 / (A + 2)  # Downwash gradient [ ]
+#CNha = 2 * pi * Ah / (Ah + 2)  # Stabiliser normal force slope [ ]
+#depsda = 4 / (A + 2)  # Downwash gradient [ ]
 
 # Lift and drag coefficient
 
 CL = 1.136  # Lift coefficient [ ]
-CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e)  # Drag coefficient [ ]
+#CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e)  # Drag coefficient [ ]
 
 # Stabiblity derivatives
 

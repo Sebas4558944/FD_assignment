@@ -6,7 +6,7 @@ from numpy import pi, power, sin, cos
 # Stationary flight condition
 
 hp0 = 1.  # pressure altitude in the stationary flight condition [m]
-V0 = 100.  # true airspeed in the stationary flight condition [m/sec]
+V0 = 60.  # true airspeed in the stationary flight condition [m/sec]
 alpha0 = 0.  # angle of attack in the stationary flight condition [rad]
 th0 = 0.  # pitch angle in the stationary flight condition [rad]
 
@@ -19,8 +19,8 @@ CD0 = 0.04  # Zero lift drag coefficient [ ]
 CLa = 5.084  # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma = -0.1615  # longitudinal stabilty [ ]
-Cmde = -0.3367  # elevator effectiveness [ ]
+Cma = -0.1 # longitudinal stabilty [ ]
+Cmde = -0.28 # elevator effectiveness [ ]
 
 # Aircraft geometry
 

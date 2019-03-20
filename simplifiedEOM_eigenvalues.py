@@ -79,11 +79,11 @@ eigenlist_dimensional = [["short period", (short_period()[0]*V0/c, short_period(
             ["Spiral", spiral()*V0/b]]
             
 def sym():
-    A = 4*muc**2*KY2*(CZadot--2*muc)
+    A = 4*muc**2*KY2*(CZadot-2*muc)
     B = Cmadot*2*muc*(CZq+2*muc)-Cmq*2*muc*(CZadot-2*muc)-2*muc*KY2*(CXu*(CZadot-2*muc)-2*muc*CZa)
     C = Cma*2*muc*(CZq+2*muc)-Cmadot*(2*muc*CX0+CXu*(CZq+2*muc))+Cmq*(CXu*(CZadot-2*muc)-2*muc*CZa)+2*muc*KY2*(CXa*CZu-CZa*CXu)
     E = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
-    D = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cmadot*(CX0*CXu-CZ0*CZa)+Cmq*(CXu*CZa-CZu-CXa)
+    D = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cmadot*(CX0*CXu-CZ0*CZu)+Cmq*(CXu*CZa-CZu*CXa)
     eigs = sp.roots(np.array([A,B,C,D,E]))
     return eigs
 
