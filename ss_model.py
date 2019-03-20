@@ -65,7 +65,7 @@ CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
 # combining state vectors gives:
 #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
 #u = [de,da,dr]
-C1S=np.matrix([[-2.*muc*c/(V0**2.), 0., 0., 0., 0., 0. ,0., 0., 0., 0.],\
+C1S=np.matrix([[-2.*muc*c/(V0**2), 0., 0., 0., 0., 0. ,0., 0., 0., 0.],\
                [0., (CZadot - 2. * muc) * c/V0, 0., 0. ,0., 0., 0., 0., 0., 0.],\
                [0., 0., -c/V0, 0.,  0., 0. ,0., 0., 0., 0.],\
                [0., Cmadot * c/V0, 0., -2.*muc*KY2*(c/V0)**2., 0., 0., 0., 0., 0., 0.],\
@@ -283,7 +283,7 @@ T = np.linspace(0,tmax,steps)
 #create impulse vector for t = 0 
 u_input = []
 #[de,da,dr]
-u_val = [0.01,0.,0.]
+u_val = [0.0,0.,0.0]
 
 #move forcing to 0 for anything past the initial input
 for i in range(steps):
