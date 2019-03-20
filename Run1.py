@@ -19,10 +19,13 @@ import pandas as pd
 from datareader import *
 from Cit_par import S, g, A
 from conversion_helpers import lbs_to_kg , celsius_to_kelvin ,kts_to_ms, ft_to_m
-from reduced_condition_calculator import Conditions
+
+from elevator_effectiveness import Conditions, Elevator
 
 CL_CD_series1 = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')[9]
-reduced_calculator = Conditions(h)
+h = CL_CD_series1[:,2]*ft_to_m
+
+
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 #                               Weight calculations
@@ -33,12 +36,12 @@ weight_zero = (9165. + 2800. + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 8
 f_used = list(CL_CD_series1[:, -1])
 
 for i in range(len(f_used)):
-    print f_used[i]
+    #print f_used[i]
     f_used[i] = float(f_used[i])
-print f_used
+#print f_used
 
 f_used_trim = list(El_Trim_Curve[:, -2])
-print f_used_trim
+#print f_used_trim
 
 def weight(start_weight, fuel_used):
     # Input: initial total weight; elapsed time; fuel mass used so far
@@ -57,6 +60,13 @@ def weight(start_weight, fuel_used):
     # Output: array with weight at each time interval in kg
     return weight
 
+
+
+V_c = CL_CD_series1[:,3]*kts_to_ms
+T_mCelsius = CL_CD_series1[:,-1]
+T_m = T_mCelsius + celsius_to_kelvin
+reduced_calculator = Conditions(h)
+el_cond = Elevator(h,V_c,T_m,weight)
 
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
@@ -80,7 +90,7 @@ def CL(CL_CD_series1, weight, S):
         rho = reduced_calculator.calc_density()
         mach = reduced_calculator.calc_mach(V_c[i])
         temp = reduced_calculator.calc_temperature(T_m[i],mach)
-        Vtas = reduced_calculator.calc_V_t(temp-celsius_to_kelvin,mach)
+        Vtas = reduced_calculator.calc_V_t(temp,mach)
         # Calculate CL for each time interval (and convert mass [kg] to weight [N])
         Cl.append(weight[i]*g/(1./2*Vtas[i]**2*S*rho[i]))
         i+=1
@@ -100,6 +110,7 @@ T_mCelsius = CL_CD_series1[:,-1]
 T_m = T_mCelsius + celsius_to_kelvin
 ffl = CL_CD_series1[:,5]
 ffr = CL_CD_series1[:,6]
+T_d = calc_temperature_difference()
 
 
 for i in range(len(CL_CD_series1[:,2])):
@@ -129,7 +140,7 @@ def CD(CL_CD_series1, Tr, A, S):
         rho = reduced_calculator.calc_density()
         mach = reduced_calculator.calc_mach(V_c[i])
         temp = reduced_calculator.calc_temperature(T_m[i],mach)
-        Vtas = reduced_calculator.calc_V_t(temp-celsius_to_kelvin,mach)
+        Vtas = reduced_calculator.calc_V_t(temp,mach)
         # Calculate CD for each time interval, from given values for thrust
         Cd.append(2*Tr/(rho[i]*S*Vtas[i]**2))
         x.append(Cl[i]**2)
