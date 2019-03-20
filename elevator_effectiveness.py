@@ -133,21 +133,23 @@ def calc_weight(start_weight, fuel_used):
 f_1 = 'Reference_Datasheet.csv'
 f_2 = 'Post_Flight_Datasheet_13_03_V2.csv'
 
-trim_curve, old_cg, new_cg, cg_measurements = importExcelData(f_2)[12], importExcelData(f_2)[14], \
-                                              importExcelData(f_2)[15], importExcelData(f_2)[16]
+trim_curve, old_cg, new_cg, cg_measurements = importExcelData(f_1)[12], importExcelData(f_1)[14], \
+                                              importExcelData(f_1)[15], importExcelData(f_1)[16]
 
 starting_weight = (9165. + 2800. + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 80.)
 cg_start = 288.*inch_to_m
 cg_end = 150.*inch_to_m
+
 # ----------------------------------------------------------------------------------------------------------------------
+
 cg_weight = calc_weight(starting_weight, [1053.])
 elevator_effectiveness = Elevator(cg_measurements[0][2] * ft_to_m, cg_measurements[0][3] * kts_to_ms,
                                   cg_measurements[0][11] + celsius_to_kelvin, cg_weight[0])
 
-elevator_difference = cg_measurements[1][5] - cg_measurements[0][5]
+elevator_difference = np.radians(cg_measurements[1][5]) - np.radians(cg_measurements[0][5])
 
 c_n = elevator_effectiveness.calc_c_n()
-difference_cm = elevator_effectiveness.calc_d_c_m(cg_end, cg_start)  # float(old_cg)*inch_to_m, float(new_cg)*inch_to_m)
+difference_cm = elevator_effectiveness.calc_d_c_m(cg_end, cg_start)  # float(new_cg)*inch_to_m, float(old_cg)*inch_to_m)
 cm_delta = elevator_effectiveness.calc_c_m_delta(elevator_difference, difference_cm)
 
 slope = calc_d_e_d_alpha(trim_curve)
@@ -167,7 +169,7 @@ for j in range(len(trim_curve)):
     delta_r = elevator_effectiveness.calc_reduced_delta(trim_curve[j][5], m_flow_l, m_flow_r)
 
     reducing_elevator = Elevator(trim_curve[j][2] * ft_to_m, trim_curve[j][3] * kts_to_ms,
-                                 trim_curve[j][11] + celsius_to_kelvin, 7500. * g)  # weight_values[j])
+                                 trim_curve[j][11] + celsius_to_kelvin, weight_values[j])
 
     airspeed = reducing_elevator.get_reduced_equivalent_airspeed()
     stick_force_reduced = reducing_elevator.calc_reduced_stick_force(trim_curve[j][7])
@@ -238,31 +240,34 @@ p1 = np.poly1d(z1)
 z2 = np.polyfit(alpha, delta, 1)
 p2 = np.poly1d(z2)
 
-z3 = np.polyfit(speed, stick_force, 3)
+z3 = np.polyfit(speed, stick_force, 2)
 p3 = np.poly1d(z3)
 
 speed.sort()
 alpha.sort()
 
 plt.figure(1)
-pylab.plot(speed, p1(speed), "b")
+pylab.plot(speed, p1(speed))
 plt.gca().invert_yaxis()
-plt.xlabel("Reduced velocity")
-plt.ylabel("Reduced elevator deflection")
+plt.xlabel("Reduced equivalent velocity [m/s]")
+plt.ylabel("Reduced elevator deflection [degrees]")
 plt.title("Elevator-trim curve")
+plt.savefig("Elevator-trim curve")
 
 plt.figure(2)
-pylab.plot(alpha, p2(alpha), "b")
+pylab.plot(alpha, p2(alpha))
 plt.gca().invert_yaxis()
-plt.xlabel("Angle of attack")
-plt.ylabel("Reduced elevator deflection")
-plt.title("Angle plot")
+plt.xlabel("Angle of attack [degrees]")
+plt.ylabel("Reduced elevator deflection [degrees]")
+plt.title("Elevator trim curve")
+plt.savefig("Elevator vs Alpha")
 
 plt.figure(3)
-pylab.plot(speed, p3(speed), "b")
+pylab.plot(speed, p3(speed))
 plt.gca().invert_yaxis()
-plt.xlabel("Reduced velocity")
-plt.ylabel("Reduced stick-force")
+plt.xlabel("Reduced equivalent velocity [m/s]")
+plt.ylabel("Reduced stick-force [N]")
 plt.title("Control-force curve")
+plt.savefig("Elevator control-force curve")
 
 plt.show()
