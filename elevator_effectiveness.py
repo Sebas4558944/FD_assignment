@@ -21,21 +21,21 @@ class Elevator(Conditions):
         self.weight = w
 
         # Calculate conditions
-        self.density = self.calc_density()
-        self.altitude = h_p
-        self.mach = self.calc_mach(v_c)
-        self.temperature = self.calc_temperature(t_m, self.mach)
-        self.true_airspeed = self.calc_V_t(t_m, self.mach)
-        self.equivalent_airspeed = self.calc_V_e(self.true_airspeed)
-        self.reduced_equivalent_airspeed = self.calc_V_e_reduced(self.equivalent_airspeed, self.weight)
+        self.calc_pressure()
+        self.calc_density()
+        self.calc_mach(v_c)
+        self.calc_temperature(t_m)
+        self.calc_true_airspeed()
+        self.calc_equivalent_airspeed()
+        self.calc_reduced_airspeed(self.weight)
 
         # Initializing parameters to calculate
-        self.c_n = 0
-        self.c_m_delta = 0
-        self.c_m_alpha = 0
+        self.c_n = 0.0
+        self.c_m_delta = 0.0
+        self.c_m_alpha = 0.0
 
     def get_reduced_equivalent_airspeed(self):
-        return self.reduced_equivalent_airspeed
+        return self.reduced_airspeed
 
     def calc_temperature_difference(self):
         return self.temperature - self.T0 + (self.lambdas * self.altitude)
@@ -93,7 +93,7 @@ class Elevator(Conditions):
         return reduced_delta
 
     def calc_reduced_stick_force(self, force):
-        return force * (self.W_S / self.weight)
+        return force * (self.standard_weight / self.weight)
 
 
 def calc_d_e_d_alpha(trim_curve_data):
@@ -126,7 +126,7 @@ f_2 = 'Post_Flight_Datasheet_13_03_V2.csv'
 
 date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames, passengerPos, blockfuel, ACC_CLCD, \
 CL_CD_series1, CL_CD_series2, ACC_Trim, El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, \
-eigenmotions = importExcelData(f_2)
+eigenmotions = importExcelData(f_1)
 
 # ----------------------------------------------------------------------------------------------------------------------
 cg_weight = weight(15000, [1053])
@@ -136,7 +136,7 @@ elevator_effectiveness = Elevator(Cg_shift[0][2] * ft_to_m, Cg_shift[0][3] * kts
 elevator_difference = Cg_shift[1][5] - Cg_shift[0][5]
 
 c_n = elevator_effectiveness.calc_c_n()
-difference_cm = elevator_effectiveness.calc_d_c_m(7.5, 8)
+difference_cm = elevator_effectiveness.calc_d_c_m(float(pos_shifted), float(newpos_shifted))
 cm_delta = elevator_effectiveness.calc_c_m_delta(elevator_difference, difference_cm)
 
 slope = calc_d_e_d_alpha(El_Trim_Curve)
@@ -156,11 +156,14 @@ for j in range(len(El_Trim_Curve)):
     delta_r = elevator_effectiveness.calc_reduced_delta(El_Trim_Curve[j][5], m_flow_l, m_flow_r)
 
     reducing_elevator = Elevator(El_Trim_Curve[j][2] * ft_to_m, El_Trim_Curve[j][3] * kts_to_ms,
-                                 El_Trim_Curve[j][11] + celsius_to_kelvin, weights[j])
+                                 El_Trim_Curve[j][11] + celsius_to_kelvin, 7500*g)  # weights[j])
+
+    airspeed = reducing_elevator.get_reduced_equivalent_airspeed()
+    stick_force_reduced = reducing_elevator.calc_reduced_stick_force(El_Trim_Curve[j][7])
 
     alpha.append(El_Trim_Curve[j][4])
-    speed.append(reducing_elevator.get_reduced_equivalent_airspeed())
-    stick_force.append(reducing_elevator.calc_reduced_stick_force(El_Trim_Curve[j][7]))
+    speed.append(airspeed)
+    stick_force.append(stick_force_reduced)
     delta.append(delta_r)
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -169,6 +172,10 @@ print "c_n equals : " + str(c_n)
 print "cm_delta equals : " + str(cm_delta)
 print "cm_alpha equals : " + str(cm_alpha)
 print "The weights are : " + str(weights)
+print "The airspeed is : " + str(speed)
+print "The angle of attack is : " + str(alpha)
+print "The elevator angle is : " + str(newpos_shifted)
+print "The stick force is : " + str(pos_shifted)
 
 z1 = np.polyfit(speed, delta, 2)
 p1 = np.poly1d(z1)
@@ -176,7 +183,7 @@ p1 = np.poly1d(z1)
 z2 = np.polyfit(alpha, delta, 1)
 p2 = np.poly1d(z2)
 
-z3 = np.polyfit(speed, stick_force, 2)
+z3 = np.polyfit(speed, stick_force, 3)
 p3 = np.poly1d(z3)
 
 speed.sort()
