@@ -76,9 +76,9 @@ C1S=np.matrix([[-2.*muc*c/(V0**2), 0., 0., 0., 0., 0. ,0., 0., 0., 0.],\
                [ 0. ,0., 0., 0.,  0., 0. ,0., 0., 0., 0.],\
                [ 0. ,0., 0., 0.,  0., 0. ,0., 0., 0., 0.]])
 
-C2S=np.matrix([[CXu/V0, CXa, CZ0 ,CXq * c/V0,  0., 0. ,0., 0., 0., 0.],\
+C2S=np.matrix([[CXu/V0, CXa, CZ0 ,CXq*c/V0,  0., 0. ,0., 0., 0., 0.],\
                [CZu/V0, CZa, -CX0, (CZq+2*muc) * (c/V0),  0., 0. ,0., 0., 0., 0.],\
-               [0. , 0. , 0.,  1.,  0., 0. ,0., 0., 0., 0.],\
+               [0. , 0. , 0.,  (c/V0),  0., 0. ,0., 0., 0., 0.],\
                [Cmu/V0, Cma, 0, Cmq*c/V0,  0., 0. ,0., 0., 0., 0.],\
                [alpha0-th0, V0*(1.+alpha0*th0), -V0*(1.+alpha0*th0),0.,  0., 0. ,0., 0., 0., 0.],\
                [ 0. ,0., 0., 0.,  0., 0. ,0., 0., 0., 0.],\
@@ -283,7 +283,7 @@ T = np.linspace(0,tmax,steps)
 #create impulse vector for t = 0 
 u_input = []
 #[de,da,dr]
-u_val = [0.0,0.,0.0]
+u_val = [0.,0.,0.0]
 
 #move forcing to 0 for anything past the initial input
 for i in range(steps):
