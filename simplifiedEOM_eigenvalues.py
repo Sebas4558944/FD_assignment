@@ -95,4 +95,5 @@ def asym():
     C=2*mub*((CYb*Cnr-CYr*Cnb)*KX2+(CYb*Clp-Clb*CYp)*KZ2+((CYb*Cnp-Cnb*CYp)+(CYb*Clr-Clb*CYr))*KXZ+4*mub*Cnb*KX2+4*mub*Clb*KXZ+0.5*(Clp*Cnr-Cnp*Clr))
     D=-4*mub*CL*(Clb*KZ2+Cnb*KXZ)+2*mub*(Clb*Cnp-Cnb*Clp)+0.5*CYb*(Clr*Cnp-Cnr*Clp)+0.5*CYp*(Clb*Cnr-Cnb*Clr)+0.5*CYr*(Clp*Cnb-Cnp*Clb)
     E=CL*(Clb*Cnr-Cnp*Clb)
-    return A,B,C,D,E
+    eigs = sp.roots(np.array([A,B,C,D,E]))
+    return eigs
