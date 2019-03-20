@@ -11,6 +11,7 @@ import numpy as np
 import scipy.fftpack
 
 def noiseFilter(y,dt=0.1,threshold=0.5, plotFourier=False):
+    #needs fixed list as input!
     ylen=len(y)
     yf = scipy.fftpack.fft(y)    
     xf = np.linspace(0.0, 1.0/(2.0*dt), ylen/2)
