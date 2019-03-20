@@ -6,7 +6,7 @@ Created on Tue Mar 19 15:46:19 2019
 """
 
 import numpy as np
-from Cit_par_testing import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
+from Cit_par import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
 CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
 import scipy as sp
@@ -86,7 +86,7 @@ def sym():
     E = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
     R=B*C*D-A*D**2-B**2*E
     eigs = sp.roots(np.array([A,B,C,D,E]))
-    return eigs,A,B,C,D,E, R
+    return eigs*V0/c,A,B,C,D,E,R
 
 
 
@@ -98,5 +98,5 @@ def asym():
     E=CL*(Clb*Cnr-Cnb*Clr)
     R=B*C*D-A*D**2-B**2*E
     eigs = sp.roots(np.array([A,B,C,D,E]))
-    return eigs,A,B,C,D,E, R
+    return eigs*V0/b,A,B,C,D,E,R
 

@@ -5,11 +5,11 @@ Created on Mon Mar 04 14:59:51 2019
 @author: msjor
 """
 
-import control.matlab as co
+#import control.matlab as co
 import numpy as np
-from Cit_par import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
+from Cit_par_testing import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
-CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr
+CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0,th0
 import matplotlib.pyplot as plt
 
 #\theta=angle between X and horizontal
@@ -63,21 +63,22 @@ import matplotlib.pyplot as plt
 #B=C1^-1*-C2
 
 
-C1S=np.matrix([[-2*muc*c, 0, 0, 0],\
-                [0, (CZadot - 2 * muc) * c/V0, 0, 0],
-                [0, 0, c/V0, 0,],
-                [0, Cmadot * c/V0, 0, -2*muc*KY2*(c/V0)**2]])
+C1S=np.matrix([[-2*muc*c/(V0**2), 0, 0, 0],\
+               [0, (CZadot - 2 * muc) * c/V0, 0, 0],\
+               [0, 0, -c/V0, 0],\
+               [0, Cmadot * c/V0, 0, -2*muc*KY2*(c/V0)**2]])
+               
 
-C2S=np.matrix([[CXu*V0, CXa, CZ0 ,CXq * c/V0],\
-              [CZu*V0, CZa, -CX0, (CZq+2*muc) * (c/V0)],\
-              [0 , 0 , 0,  c/V0],\
-              [Cmu*V0, Cma, 0, Cmq*c/V0]])
+C2S=np.matrix([[CXu/V0, CXa, CZ0 ,CXq *0. * c/V0],\
+               [CZu/V0, CZa, -CX0, (CZq+2*muc) * (c/V0)],\
+               [0 , 0 , 0,  1.],\
+               [Cmu/V0, Cma, 0, Cmq*c/V0]])
 
 C3S=np.matrix([[CXde],\
                 [CZde],\
                 [0],\
                 [Cmde]])
-
+                
 C1A=np.matrix([[(CYbdot-2*mub)*b/V0, 0, 0, 0,0],\
                 [0, -0.5*b/V0, 0, 0,0],\
                 [0, 0, -2*mub*KX2*(b/V0)**2, 2*mub*KXZ*(b/V0)**2,0],\
