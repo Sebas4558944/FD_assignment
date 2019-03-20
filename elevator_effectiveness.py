@@ -133,22 +133,24 @@ def calc_weight(start_weight, fuel_used):
 f_1 = 'Reference_Datasheet.csv'
 f_2 = 'Post_Flight_Datasheet_13_03_V2.csv'
 
-date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames, passengerPos, blockfuel, ACC_CLCD, \
-CL_CD_series1, CL_CD_series2, ACC_Trim, El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, \
-eigenmotions = importExcelData(f_1)
+trim_curve, old_cg, new_cg, cg_measurements = importExcelData(f_2)[12], importExcelData(f_2)[14], \
+                                              importExcelData(f_2)[15], importExcelData(f_2)[16]
 
+starting_weight = (9165. + 2800. + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 80.)
+cg_start = 288.*inch_to_m
+cg_end = 150.*inch_to_m
 # ----------------------------------------------------------------------------------------------------------------------
-cg_weight = calc_weight(15000, [1053])
-elevator_effectiveness = Elevator(Cg_shift[0][2] * ft_to_m, Cg_shift[0][3] * kts_to_ms,
-                                  Cg_shift[0][11] + celsius_to_kelvin, cg_weight[0])
+cg_weight = calc_weight(starting_weight, [1053.])
+elevator_effectiveness = Elevator(cg_measurements[0][2] * ft_to_m, cg_measurements[0][3] * kts_to_ms,
+                                  cg_measurements[0][11] + celsius_to_kelvin, cg_weight[0])
 
-elevator_difference = Cg_shift[1][5] - Cg_shift[0][5]
+elevator_difference = cg_measurements[1][5] - cg_measurements[0][5]
 
 c_n = elevator_effectiveness.calc_c_n()
-difference_cm = elevator_effectiveness.calc_d_c_m(float(pos_shifted), float(newpos_shifted))
+difference_cm = elevator_effectiveness.calc_d_c_m(cg_end, cg_start)  # float(old_cg)*inch_to_m, float(new_cg)*inch_to_m)
 cm_delta = elevator_effectiveness.calc_c_m_delta(elevator_difference, difference_cm)
 
-slope = calc_d_e_d_alpha(El_Trim_Curve)
+slope = calc_d_e_d_alpha(trim_curve)
 cm_alpha = elevator_effectiveness.calc_c_m_alpha(slope)
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -157,67 +159,66 @@ delta = []
 speed = []
 alpha = []
 stick_force = []
-weight_values = calc_weight((9165. + 2800. + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 80.),
-                            list(El_Trim_Curve[:, -2]))
+weight_values = calc_weight(starting_weight, list(trim_curve[:, -2]))
 
-for j in range(len(El_Trim_Curve)):
-    m_flow_l = El_Trim_Curve[j][8] * lbs_per_hour_to_kg_per_s
-    m_flow_r = El_Trim_Curve[j][9] * lbs_per_hour_to_kg_per_s
-    delta_r = elevator_effectiveness.calc_reduced_delta(El_Trim_Curve[j][5], m_flow_l, m_flow_r)
+for j in range(len(trim_curve)):
+    m_flow_l = trim_curve[j][8] * lbs_per_hour_to_kg_per_s
+    m_flow_r = trim_curve[j][9] * lbs_per_hour_to_kg_per_s
+    delta_r = elevator_effectiveness.calc_reduced_delta(trim_curve[j][5], m_flow_l, m_flow_r)
 
-    reducing_elevator = Elevator(El_Trim_Curve[j][2] * ft_to_m, El_Trim_Curve[j][3] * kts_to_ms,
-                                 El_Trim_Curve[j][11] + celsius_to_kelvin, 7500 * g)  # weight_values[j])
+    reducing_elevator = Elevator(trim_curve[j][2] * ft_to_m, trim_curve[j][3] * kts_to_ms,
+                                 trim_curve[j][11] + celsius_to_kelvin, 7500. * g)  # weight_values[j])
 
     airspeed = reducing_elevator.get_reduced_equivalent_airspeed()
-    stick_force_reduced = reducing_elevator.calc_reduced_stick_force(El_Trim_Curve[j][7])
+    stick_force_reduced = reducing_elevator.calc_reduced_stick_force(trim_curve[j][7])
 
-    alpha.append(El_Trim_Curve[j][4])
+    alpha.append(trim_curve[j][4])
     speed.append(airspeed)
     stick_force.append(stick_force_reduced)
     delta.append(delta_r)
 
 # ----------------------------------------------------------------------------------------------------------------------
-#
-# print "c_n equals : " + str(c_n)
-# print "cm_delta equals : " + str(cm_delta)
-# print "cm_alpha equals : " + str(cm_alpha)
-# print "The weights are : " + str(weight_values)
-# print "The airspeed is : " + str(speed)
-# print "The angle of attack is : " + str(alpha)
-# print "The elevator angle is : " + str(delta)
-# print "The stick force is : " + str(stick_force)
-#
-# z1 = np.polyfit(speed, delta, 2)
-# p1 = np.poly1d(z1)
-#
-# z2 = np.polyfit(alpha, delta, 1)
-# p2 = np.poly1d(z2)
-#
-# z3 = np.polyfit(speed, stick_force, 3)
-# p3 = np.poly1d(z3)
-#
-# speed.sort()
-# alpha.sort()
-#
-# plt.figure(1)
-# pylab.plot(speed, p1(speed), "b")
-# plt.gca().invert_yaxis()
-# plt.xlabel("Reduced velocity")
-# plt.ylabel("Reduced elevator deflection")
-# plt.title("Elevator-trim curve")
-#
-# plt.figure(2)
-# pylab.plot(alpha, p2(alpha), "b")
-# plt.gca().invert_yaxis()
-# plt.xlabel("Angle of attack")
-# plt.ylabel("Reduced elevator deflection")
-# plt.title("Angle plot")
-#
-# plt.figure(3)
-# pylab.plot(speed, p3(speed), "b")
-# plt.gca().invert_yaxis()
-# plt.xlabel("Reduced velocity")
-# plt.ylabel("Reduced stick-force")
-# plt.title("Control-force curve")
-#
-# plt.show()
+
+print "c_n equals : " + str(c_n)
+print "cm_delta equals : " + str(cm_delta)
+print "cm_alpha equals : " + str(cm_alpha)
+print "The weights are : " + str(weight_values)
+print "The airspeed is : " + str(speed)
+print "The angle of attack is : " + str(alpha)
+print "The elevator angle is : " + str(delta)
+print "The stick force is : " + str(stick_force)
+
+z1 = np.polyfit(speed, delta, 2)
+p1 = np.poly1d(z1)
+
+z2 = np.polyfit(alpha, delta, 1)
+p2 = np.poly1d(z2)
+
+z3 = np.polyfit(speed, stick_force, 3)
+p3 = np.poly1d(z3)
+
+speed.sort()
+alpha.sort()
+
+plt.figure(1)
+pylab.plot(speed, p1(speed), "b")
+plt.gca().invert_yaxis()
+plt.xlabel("Reduced velocity")
+plt.ylabel("Reduced elevator deflection")
+plt.title("Elevator-trim curve")
+
+plt.figure(2)
+pylab.plot(alpha, p2(alpha), "b")
+plt.gca().invert_yaxis()
+plt.xlabel("Angle of attack")
+plt.ylabel("Reduced elevator deflection")
+plt.title("Angle plot")
+
+plt.figure(3)
+pylab.plot(speed, p3(speed), "b")
+plt.gca().invert_yaxis()
+plt.xlabel("Reduced velocity")
+plt.ylabel("Reduced stick-force")
+plt.title("Control-force curve")
+
+plt.show()

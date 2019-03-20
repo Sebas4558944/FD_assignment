@@ -79,9 +79,6 @@ def CL(CL_CD_series1, start_weight, s):
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 def Plots(Cl, Cd, alpha):
-    print Cl
-    print Cd
-    print alpha
     # Plot CL against angle of attack
     plt.figure()
     plt.plot(alpha, Cl)
