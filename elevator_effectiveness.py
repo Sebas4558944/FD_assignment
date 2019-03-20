@@ -133,8 +133,8 @@ def calc_weight(start_weight, fuel_used):
 f_1 = 'Reference_Datasheet.csv'
 f_2 = 'Post_Flight_Datasheet_13_03_V2.csv'
 
-trim_curve, old_cg, new_cg, cg_measurements = importExcelData(f_1)[12], importExcelData(f_1)[14], \
-                                              importExcelData(f_1)[15], importExcelData(f_1)[16]
+trim_curve, old_cg, new_cg, cg_measurements = importExcelData(f_2)[12], importExcelData(f_2)[14], \
+                                              importExcelData(f_2)[15], importExcelData(f_2)[16]
 
 starting_weight = (9165. + 2800. + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 80.)
 cg_start = 288.*inch_to_m
