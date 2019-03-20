@@ -9,7 +9,7 @@ import numpy as np
 from Cit_par_testing import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
 CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
-
+import scipy as sp
 
 #from eigenvalues to damping ratio and natural frequency
 def freq_damp_period(eigen):
@@ -77,3 +77,12 @@ eigenlist_dimensional = [["short period", (short_period()[0]*V0/c, short_period(
             ["Aperiodic roll", aperiodic_roll()*V0/b],\
             ["dutch_roll", (dutch_roll()[0]*V0/b, dutch_roll()[1]*V0/b)],\
             ["Spiral", spiral()*V0/b]]
+            
+def sym():
+    A = 4*muc**2*KY2*(CZadot--2*muc)
+    B = Cmadot*2*muc*(CZq+2*muc)-Cmq*2*muc*(CZadot-2*muc)-2*muc*KY2*(CXu*(CZadot-2*muc)-2*muc*CZa)
+    C = Cma*2*muc*(CZq+2*muc)-Cmadot*(2*muc*CX0+CXu*(CZq+2*muc))+Cmq*(CXu*(CZadot-2*muc)-2*muc*CZa)+2*muc*KY2*(CXa*CZu-CZa*CXu)
+    D = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cmadot*(CX0*CXu-CZ0*CZa)+Cmq*(CXu*CZa-CZu-CXa)
+    E = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
+    eigs = sp.roots(np.array([A,B,C,D,E]))
+    return eigs

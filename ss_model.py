@@ -283,7 +283,7 @@ T = np.linspace(0,tmax,steps)
 #create impulse vector for t = 0 
 u_input = []
 #[de,da,dr]
-u_val = [0.,0.025,0.]
+u_val = [0.01,0.0,0.]
 
 #move forcing to 0 for anything past the initial input
 for i in range(steps):
