@@ -7,7 +7,7 @@ Created on Mon Mar 04 14:59:51 2019
 import matplotlib.pyplot as plt
 import control.matlab as co
 import numpy as np
-from Cit_par import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
+from Cit_par_testing import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
 CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
 from scipy import roots
@@ -65,9 +65,9 @@ from scipy import roots
 # combining state vectors gives:
 #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
 #u = [de,da,dr]
-C1S=np.matrix([[-2*muc*c, 0, 0, 0, 0, 0 ,0, 0, 0, 0],\
+C1S=np.matrix([[-2*muc*c/(V0**2), 0, 0, 0, 0, 0 ,0, 0, 0, 0],\
                [0, (CZadot - 2 * muc) * c/V0, 0, 0, 0, 0, 0, 0, 0, 0],\
-               [0, 0, c/V0, 0, 0, 0, 0, 0, 0, 0],\
+               [0, 0, -c/V0, 0, 0, 0, 0, 0, 0, 0],\
                [0, Cmadot * c/V0, 0, -2*muc*KY2*(c/V0)**2, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
@@ -76,10 +76,10 @@ C1S=np.matrix([[-2*muc*c, 0, 0, 0, 0, 0 ,0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
 
-C2S=np.matrix([[CXu*V0, CXa, CZ0 ,CXq * c/V0, 0, 0, 0, 0, 0, 0],\
-               [CZu*V0, CZa, -CX0, (CZq+2*muc) * (c/V0), 0, 0, 0, 0, 0, 0],\
-               [0 , 0 , 0,  c/V0, 0, 0, 0, 0, 0, 0],\
-               [Cmu*V0, Cma, 0, Cmq*c/V0, 0, 0, 0, 0, 0, 0],\
+C2S=np.matrix([[CXu/V0, CXa, CZ0 ,CXq * c/V0, 0, 0, 0, 0, 0, 0],\
+               [CZu/V0, CZa, -CX0, (CZq+2*muc) * (c/V0), 0, 0, 0, 0, 0, 0],\
+               [0 , 0 , 0,  1, 0, 0, 0, 0, 0, 0],\
+               [Cmu/V0, Cma, 0, Cmq*c/V0, 0, 0, 0, 0, 0, 0],\
                [alpha0-th0, V0*(1.+alpha0*th0), -V0*(1+alpha0*th0), 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\
@@ -227,10 +227,10 @@ title_font = 25
 ##create impulse vector for t = 0 
 #u = []
 ##[de,da,dr]
-#u_impulse = [0.,0.,1.]
+#u_impulse = [0.1,0.,0.]
 #u.append(u_impulse)
-#
-##move forcing to 0 for anything past the initial input
+
+#move forcing to 0 for anything past the initial input
 #for i in range(steps-1):
 #    u.append([0.,0.,0.])
 #u = np.array(u)
@@ -276,14 +276,14 @@ title_font = 25
 #############step input from t=0 to t=tstep ###################
 steps = 1000
 tmax = 100. 
-tstep = 10.
+tstep = 1.
 nstep = tstep/(tmax/float(steps))
 T = np.linspace(0,tmax,steps)
 
 #create impulse vector for t = 0 
 u_input = []
 #[de,da,dr]
-u_val = [0.,0.,0.]
+u_val = [0.,0.025,0.]
 
 #move forcing to 0 for anything past the initial input
 for i in range(steps):
