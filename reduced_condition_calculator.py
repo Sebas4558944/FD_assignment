@@ -35,8 +35,7 @@ class Conditions:
         return np.sqrt(
             (2 / (self.gamma - 1)) * (np.power((1 + (self.p0 / p) * inner), ((self.gamma - 1) / self.gamma)) - 1))
 
-    def calc_V_t(self, temp, mach):   # Input in Celsius!!
-        temp += celsius_to_kelvin
+    def calc_V_t(self, temp, mach):
         a = np.sqrt((self.gamma * self.R * temp))
 
         return mach * a
