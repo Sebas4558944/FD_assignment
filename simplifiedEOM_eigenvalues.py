@@ -6,7 +6,7 @@ Created on Tue Mar 19 15:46:19 2019
 """
 
 import numpy as np
-from Cit_par import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
+from Cit_par_testing import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
 CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
 
@@ -64,3 +64,16 @@ def spiral():
     #CYr and CYp neglected 
     eig = 2*CL*(Clb*Cnr-Cnb*Clr)/(Clp*(CYb*Cnr+4*mub*Cnb)-Cnp*(CYb*Clr+4*mub*Clb))
     return eig
+
+
+eigenlist = [["short period", short_period()],\
+            ["Phugoid", phugoid()],\
+            ["Aperiodic roll", aperiodic_roll()],\
+            ["dutch_roll", dutch_roll()],\
+            ["Spiral", spiral()]]
+            
+eigenlist_dimensional = [["short period", (short_period()[0]*V0/c, short_period()[1]*V0/c)],\
+            ["Phugoid",  (phugoid()[0]*V0/c, phugoid()[1]*V0/c)],\
+            ["Aperiodic roll", aperiodic_roll()*V0/b],\
+            ["dutch_roll", (dutch_roll()[0]*V0/b, dutch_roll()[1]*V0/b)],\
+            ["Spiral", spiral()*V0/b]]

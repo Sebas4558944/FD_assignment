@@ -220,10 +220,6 @@ date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
  El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
  = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')
     
-#import webbrowser  
-#url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-#webbrowser.open(url, new=0, autoraise=True)
-
 # print eigenmotions[0]
 # print convertToSec(eigenmotions[0])
 # print convertToTimeStr(0,0,convertToSec(eigenmotions[0]))
