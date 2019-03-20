@@ -141,8 +141,8 @@ def importExcelData(f):
     #CG shift: 
     #_shifted all relates to moved person
     name_shifted=arr_str[69,1]
-    pos_shifted=arr_str[69,1]
-    newpos_shifted=arr_str[70,4]
+    pos_shifted=arr_str[70,2]
+    newpos_shifted=arr_str[70,7]
 
     #time [hrs:min], Elapsed time [sec] #empty, hp [ft] (pressure altitude)\
     #IAS [kts], a [deg], de [deg], detr [deg], Fe [N], FFL [lbs/hr], \
@@ -218,12 +218,8 @@ def fixList(fixthislist):
 date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
 , passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
  El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
- = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')
+ = importExcelData('Reference_Datasheet.csv')
     
-#import webbrowser  
-#url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-#webbrowser.open(url, new=0, autoraise=True)
-
 # print eigenmotions[0]
 # print convertToSec(eigenmotions[0])
 # print convertToTimeStr(0,0,convertToSec(eigenmotions[0]))

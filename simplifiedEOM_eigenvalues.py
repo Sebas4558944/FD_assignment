@@ -82,7 +82,17 @@ def sym():
     A = 4*muc**2*KY2*(CZadot--2*muc)
     B = Cmadot*2*muc*(CZq+2*muc)-Cmq*2*muc*(CZadot-2*muc)-2*muc*KY2*(CXu*(CZadot-2*muc)-2*muc*CZa)
     C = Cma*2*muc*(CZq+2*muc)-Cmadot*(2*muc*CX0+CXu*(CZq+2*muc))+Cmq*(CXu*(CZadot-2*muc)-2*muc*CZa)+2*muc*KY2*(CXa*CZu-CZa*CXu)
-    D = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cmadot*(CX0*CXu-CZ0*CZa)+Cmq*(CXu*CZa-CZu-CXa)
     E = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
+    D = Cmu*(CXa*(CZq+2*muc)-CZ0*(CZadot-2*muc))-Cma*(2*muc*CX0+CXu*(CZq+2*muc))+Cmadot*(CX0*CXu-CZ0*CZa)+Cmq*(CXu*CZa-CZu-CXa)
     eigs = sp.roots(np.array([A,B,C,D,E]))
     return eigs
+
+
+
+def asym():
+    A=16*mub**3*(KX2*KZ2-KXZ)
+    B=-4*mub**2*(2*CYb*(KX2*KZ2-KXZ)+Cnr*KX2+Clp*KZ2+(Clr+Cnp)*KXZ)
+    C=2*mub*((CYb*Cnr-CYr*Cnb)*KX2+(CYb*Clp-Clb*CYp)*KZ2+((CYb*Cnp-Cnb*CYp)+(CYb*Clr-Clb*CYr))*KXZ+4*mub*Cnb*KX2+4*mub*Clb*KXZ+0.5*(Clp*Cnr-Cnp*Clr))
+    D=-4*mub*CL*(Clb*KZ2+Cnb*KXZ)+2*mub*(Clb*Cnp-Cnb*Clp)+0.5*CYb*(Clr*Cnp-Cnr*Clp)+0.5*CYp*(Clb*Cnr-Cnb*Clr)+0.5*CYr*(Clp*Cnb-Cnp*Clb)
+    E=CL*(Clb*Cnr-Cnp*Clb)
+    return A,B,C,D,E
