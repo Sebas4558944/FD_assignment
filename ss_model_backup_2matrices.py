@@ -5,9 +5,9 @@ Created on Mon Mar 04 14:59:51 2019
 @author: msjor
 """
 
-#import control.matlab as co
+import control.matlab as co
 import numpy as np
-from Cit_par_testing import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
+from Cit_par import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
 CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0,th0
 import matplotlib.pyplot as plt
@@ -131,9 +131,8 @@ SSA=co.ss(AA,BA,CA,DA)
 
 
 #print eigenvalues A matrix
-eigenvalsAS = scipy.linalg.eigvals(AS)
-#eigenvalsAA, eigenvectors = np.linalg.eig(AA)
-print eigenvalsAS#, eigenvalsAA
+eigenvals, eigenvectors = np.linalg.eig(AS)
+print eigenvals
 #######plotting responses
 label_font = 20
 title_font = 25
