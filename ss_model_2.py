@@ -95,10 +95,11 @@ def getStateSpace(alpha0,V0,th0):
 #######plotting vars
 label_font = 20
 title_font = 25
+modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
 
+plotting=[True]*6
 
-
-indices, times, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
+indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
 ######short period (n=1): plotting speed, altitude and angle of attack against time     =
 #####dutch roll (n=2): plot yaw angle, roll angle, altitude and true airspeed           =
@@ -110,43 +111,229 @@ indices, times, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, el
 #======                     phugoid                             =======
 #======================================================================
 #Phugoid is a pulse on the elevator
-
-#Get Flight Data
 n=0
-ind=indices[n]
-T=times[n]
-V=velocities[n]
-A=alphas[n]
-th=pitches[n]
-roll=rolls[n]
-yaw=yaws[n]
-dA=ailerons[n]
-dR=rudders[n]
-dE=elevators[n]
-
-#set init values
-V0=V[0]
-alpha0=A[0]
-th0=th[0]
-
-SS=getStateSpace(alpha0,V0,th0)
-
-#x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
-X0 = np.matrix([[0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0],\
-                [0]])
-#u = [de,da,dr]
-#Rudders and ailerons set to zero since this shit is symmetrical
-u_input=[]
-for i in range(len(rudders)):
-    u_input.append([rudders[n],0,0])
-u_input = np.array(u_input)
-
-response, T, state = co.lsim(SS, T = T,U = u_input)
+if plotting[n]:
+    #Get Flight Data
+    ind=indices[n]
+    time=times[n]
+    h=altitudes[n]
+    V=velocities[n]
+    A=alphas[n]
+    th=pitches[n]
+    roll=rolls[n]
+    yaw=yaws[n]
+    dA=ailerons[n]
+    dR=rudders[n]
+    dE=elevators[n]
+    
+    #set init values
+    V0=V[0]
+    alpha0=A[0]
+    th0=th[0]
+    hp0=h[0]
+    
+    SS=getStateSpace(alpha0,V0,th0)
+    
+    #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
+    #u = [de,da,dr]
+    #Rudders and ailerons set to zero since this shit is symmetrical
+    u_input=[]
+    for i in range(len(dE)):
+        u_input.append([-dE[i],0.,0.])
+        
+    response, T, state = co.lsim(SS, T = time,U = u_input)
+    
+    #plotting u,h,theta,psi(roll),phi(yaw)
+    speed_out = response[:,0]
+    h_out = response[:,1]
+    theta_out = response[:,2]
+    psi_out = response[:,3]
+    phi_out = response[:,4]
+    
+    for i in range(len(speed_out)):
+        speed_out[i] = speed_out[i]+V0
+        h_out[i] = h_out[i]+hp0
+        theta_out[i] = theta_out[i]+th0
+        
+    plt.figure()
+    plt.subplot(221)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Velocity [m/s]", fontsize = label_font)
+    plt.plot(T,speed_out, label='fake')
+    plt.plot(time, V, label='real')
+    plt.legend()
+    
+    plt.subplot(222)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Altitude [m]", fontsize = label_font)
+    plt.plot(T,h_out)
+    plt.plot(time, h)
+    
+    plt.subplot(223)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Pitch angle [rad]", fontsize = label_font)
+    plt.plot(T,theta_out)
+    plt.plot(time, th)
+    
+    plt.subplot(224)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Elevator [rad]", fontsize = label_font)
+    plt.plot(T,dE)
+    plt.plot(time, dE)
+    
+    plt.suptitle(modes[n], fontsize = title_font)  
+    plt.show()
+    
+#======================================================================
+#======                    Short Period                         =======
+#======================================================================
+    
+n=1
+if plotting[n]:
+    #Get Flight Data
+    ind=indices[n]
+    time=times[n]
+    h=altitudes[n]
+    V=velocities[n]
+    A=alphas[n]
+    th=pitches[n]
+    roll=rolls[n]
+    yaw=yaws[n]
+    dA=ailerons[n]
+    dR=rudders[n]
+    dE=elevators[n]
+    
+    #set init values
+    V0=V[0]
+    alpha0=A[0]
+    th0=th[0]
+    hp0=h[0]
+    
+    SS=getStateSpace(alpha0,V0,th0)
+    
+    #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
+    #u = [de,da,dr]
+    #Rudders and ailerons set to zero since this shit is symmetrical
+    u_input=[]
+    for i in range(len(dE)):
+        u_input.append([-dE[i],0.,0.])
+        
+    response, T, state = co.lsim(SS, T = time,U = u_input)
+    
+    #plotting u,h,theta,psi(roll),phi(yaw)
+    speed_out = response[:,0]
+    h_out = response[:,1]
+    theta_out = response[:,2]
+    psi_out = response[:,3]
+    phi_out = response[:,4]
+    
+    for i in range(len(speed_out)):
+        speed_out[i] = speed_out[i]+V0
+        h_out[i] = h_out[i]+hp0
+        theta_out[i] = theta_out[i]+th0
+        
+    plt.figure()
+    plt.subplot(221)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Velocity [m/s]", fontsize = label_font)
+    plt.plot(T,speed_out, label='fake')
+    plt.plot(time, V, label='real')
+    plt.legend()
+    
+    plt.subplot(222)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Altitude [m]", fontsize = label_font)
+    plt.plot(T,h_out)
+    plt.plot(time, h)
+    
+    plt.subplot(223)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Pitch angle [rad]", fontsize = label_font)
+    plt.plot(T,theta_out)
+    plt.plot(time, th)
+    
+    plt.subplot(224)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Elevator [rad]", fontsize = label_font)
+    plt.plot(T,dE)
+    plt.plot(time, dE)
+    
+    plt.suptitle(modes[n], fontsize = title_font)  
+    plt.show()
+    
+#======================================================================
+#======                    Dutch Roll                           =======
+#======================================================================
+    
+n=2
+if plotting[n]:
+    #Get Flight Data
+    ind=indices[n]
+    time=times[n]
+    h=altitudes[n]
+    V=velocities[n]
+    A=alphas[n]
+    th=pitches[n]
+    roll=rolls[n]
+    yaw=yaws[n]
+    dA=ailerons[n]
+    dR=rudders[n]
+    dE=elevators[n]
+    
+    #set init values
+    V0=V[0]
+    alpha0=A[0]
+    th0=th[0]
+    hp0=h[0]
+    
+    SS=getStateSpace(alpha0,V0,th0)
+    
+    #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
+    #u = [de,da,dr]
+    #Rudders and ailerons set to zero since this shit is symmetrical
+    u_input=[]
+    for i in range(len(dE)):
+        u_input.append([-dE[i],0.,0.])
+        
+    response, T, state = co.lsim(SS, T = time,U = u_input)
+    
+    #plotting u,h,theta,psi(roll),phi(yaw)
+    speed_out = response[:,0]
+    h_out = response[:,1]
+    theta_out = response[:,2]
+    psi_out = response[:,3]
+    phi_out = response[:,4]
+    
+    for i in range(len(speed_out)):
+        speed_out[i] = speed_out[i]+V0
+        h_out[i] = h_out[i]+hp0
+        theta_out[i] = theta_out[i]+th0
+        
+    plt.figure()
+    plt.subplot(221)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Velocity [m/s]", fontsize = label_font)
+    plt.plot(T,speed_out, label='fake')
+    plt.plot(time, V, label='real')
+    plt.legend()
+    
+    plt.subplot(222)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Altitude [m]", fontsize = label_font)
+    plt.plot(T,h_out)
+    plt.plot(time, h)
+    
+    plt.subplot(223)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Pitch angle [rad]", fontsize = label_font)
+    plt.plot(T,theta_out)
+    plt.plot(time, th)
+    
+    plt.subplot(224)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Elevator [rad]", fontsize = label_font)
+    plt.plot(T,dE)
+    plt.plot(time, dE)
+    
+    plt.suptitle(modes[n], fontsize = title_font)  
+    plt.show()

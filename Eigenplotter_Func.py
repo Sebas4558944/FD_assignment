@@ -49,21 +49,21 @@ def GetLists():
     , passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
      El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions\
      = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')
-    time_list = newDict.get("time") 
-    velocity_list = newDict.get("Dadc1_tas")
-    altitude_list = newDict.get("Dadc1_alt")
-    alpha_list = newDict.get("vane_AOA")
-    elevator_list = newDict.get("delta_e")
-    roll_list = newDict.get("Ahrs1_Roll")
-    yaw_list = newDict.get("Ahrs1_Pitch")
-    aileron_list = newDict.get("delta_a")
-    rudder_list = newDict.get("delta_r")
-    pitch_list = newDict.get("Ahrs1_Pitch")
+    time_list = newDict.get("time")
+    velocity_list = fixList(newDict.get("Dadc1_tas"))
+    altitude_list = fixList(newDict.get("Dadc1_alt"))
+    alpha_list = np.radians(fixList(newDict.get("vane_AOA")))
+    elevator_list = np.radians(fixList(newDict.get("delta_e")))
+    roll_list = np.radians(fixList(newDict.get("Ahrs1_Roll")))
+    yaw_list = np.radians(fixList(newDict.get("Ahrs1_Pitch")))
+    aileron_list = np.radians(fixList(newDict.get("delta_a")))
+    rudder_list = np.radians(fixList(newDict.get("delta_r")))
+    pitch_list = np.radians(fixList(newDict.get("Ahrs1_Pitch")))
     return time_list,velocity_list,altitude_list,alpha_list, pitch_list,roll_list,yaw_list,aileron_list,rudder_list, elevator_list, eigenmotions
 
 
 def getEigenmotions():
-    lengths = [250.,60.,45.,30.,60.,200.]
+    lengths = [150.,30.,45.,30.,60.,200.]
     modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
     time_list,velocity_list,altitude_list,alpha_list, pitch_list,roll_list,yaw_list,aileron_list,rudder_list, elevator_list, eigenmotions=GetLists()
     times=[]
@@ -88,7 +88,7 @@ def getEigenmotions():
         ailerons.append(aileron_list[indices[0]:indices[-1]])
         rudders.append(rudder_list[indices[0]:indices[-1]])
         pitches.append(pitch_list[indices[0]:indices[-1]])
-    return indices, times, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators
+    return indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators
 
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time
 ######short period (n=1): plotting speed, altitude and angle of attack against time 
