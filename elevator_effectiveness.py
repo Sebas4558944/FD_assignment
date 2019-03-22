@@ -122,7 +122,7 @@ def calc_weight(start_weight, fuel_used):
     weights = [start_weight]
 
     for i in range(1, len(fuel_used)):
-        weight_left = weights[i - 1] + float(fuel_used[i])
+        weight_left = weights[0] - float(fuel_used[i])
         weights.append(weight_left)
 
     return weights
