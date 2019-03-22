@@ -99,7 +99,7 @@ reallabel='real'
 fakelabel='fake'
 modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
 
-plotting=[True]*6
+plotting=[True, True, False, False, False, False]
 
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
@@ -108,6 +108,7 @@ indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, 
 #####dutch roll YD (n=3): plot yaw angle, roll angle, altitude and true airspeed        =
 #####aperiodic roll (n=4): plot yaw angle, roll angle, altitude and true airspeed       =
 #####spiral (n=5): plot yaw angle, roll angle, altitude and true airspeed               =
+
 
 #======================================================================
 #======                     phugoid                             =======
