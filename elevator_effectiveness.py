@@ -180,50 +180,6 @@ for j in range(len(trim_curve)):
     delta.append(delta_r)
 
 # ----------------------------------------------------------------------------------------------------------------------
-#
-# print "c_n equals : " + str(c_n)
-# print "cm_delta equals : " + str(cm_delta)
-# print "cm_alpha equals : " + str(cm_alpha)
-# print "The weights are : " + str(weight_values)
-# print "The airspeed is : " + str(speed)
-# print "The angle of attack is : " + str(alpha)
-# print "The elevator angle is : " + str(delta)
-# print "The stick force is : " + str(stick_force)
-#
-# z1 = np.polyfit(speed, delta, 2)
-# p1 = np.poly1d(z1)
-#
-# z2 = np.polyfit(alpha, delta, 1)
-# p2 = np.poly1d(z2)
-#
-# z3 = np.polyfit(speed, stick_force, 3)
-# p3 = np.poly1d(z3)
-#
-# speed.sort()
-# alpha.sort()
-#
-# plt.figure(1)
-# pylab.plot(speed, p1(speed), "b")
-# plt.gca().invert_yaxis()
-# plt.xlabel("Reduced velocity")
-# plt.ylabel("Reduced elevator deflection")
-# plt.title("Elevator-trim curve")
-#
-# plt.figure(2)
-# pylab.plot(alpha, p2(alpha), "b")
-# plt.gca().invert_yaxis()
-# plt.xlabel("Angle of attack")
-# plt.ylabel("Reduced elevator deflection")
-# plt.title("Angle plot")
-#
-# plt.figure(3)
-# pylab.plot(speed, p3(speed), "b")
-# plt.gca().invert_yaxis()
-# plt.xlabel("Reduced velocity")
-# plt.ylabel("Reduced stick-force")
-# plt.title("Control-force curve")
-#
-# plt.show()
 
 print "c_n equals : " + str(c_n)
 print "cm_delta equals : " + str(cm_delta)
