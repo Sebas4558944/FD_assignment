@@ -29,7 +29,7 @@ def short_period():
     C = CZa*Cmq-(2*muc+CZq)*Cma
     eig1 =(-B+np.sqrt(B-4*A*C+0j))/2/A
     eig2 = (-B-np.sqrt(B-4*A*C+0j))/2/A
-    return eig1, eig2
+    return eig1*V0/c, eig2*V0/c
 
 def phugoid():
     #no change in pitch rate and no in angle of attack
@@ -39,7 +39,7 @@ def phugoid():
     C = CZ0*(Cmu*CZa-CZu*Cma)
     eig1 =(-B+np.sqrt(B-4*A*C+0j))/2/A
     eig2 = (-B-np.sqrt(B-4*A*C+0j))/2/A
-    return eig1, eig2
+    return eig1*V0/c, eig2*V0/c
     
 def aperiodic_roll():
     #only a real eigenvalue as aperiodic
@@ -47,7 +47,7 @@ def aperiodic_roll():
     #only roll so no beta nd r 
     #direct result from rolling moment equation
     eig = Clp/(4*mub*KX2)
-    return eig
+    return eig*V0/b
     
 def dutch_roll():
     #CYbdot and Cnbdot are neglected
@@ -57,13 +57,13 @@ def dutch_roll():
     C = 4*mub*Cnb+CYb*Cnr
     eig1 =(-B+np.sqrt(B-4*A*C+0j))/2/A
     eig2 = (-B-np.sqrt(B-4*A*C+0j))/2/A
-    return eig1, eig2
+    return eig1*V0/b, eig2*V0/b
     
 def spiral():
     #only a real eigenvalue as not aperiodic motion
     #CYr and CYp neglected 
     eig = 2*CL*(Clb*Cnr-Cnb*Clr)/(Clp*(CYb*Cnr+4*mub*Cnb)-Cnp*(CYb*Clr+4*mub*Clb))
-    return eig
+    return eig*V0/b
 
 
 eigenlist = [["short period", short_period()],\
