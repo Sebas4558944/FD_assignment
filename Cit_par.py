@@ -6,7 +6,7 @@ from numpy import pi, power, sin, cos
 # Stationary flight condition
 
 hp0 = 1.  # pressure altitude in the stationary flight condition [m]
-V0 = 60.  # true airspeed in the stationary flight condition [m/sec]
+V0 = 180.  # true airspeed in the stationary flight condition [m/sec]
 alpha0 = 0.  # angle of attack in the stationary flight condition [rad]
 th0 = 0.  # pitch angle in the stationary flight condition [rad]
 
@@ -78,7 +78,7 @@ CX0 = W * sin(th0) / (0.5 * rho * V0 ** 2 * S)
 CXu = -0.02792
 CXa = -0.47966
 CXadot = +0.08330
-CXq = -0.28170*0.
+CXq = -0.28170
 CXde = -0.03728
 
 CZ0 = -W * cos(th0) / (0.5 * rho * V0 ** 2 * S)
