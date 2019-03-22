@@ -81,11 +81,11 @@ def CL(CL_CD_series1, start_weight, s):
     # Get CD_zero from the intersection with the y-axis
     CD_zero = np.polyfit(x, Cd, 1, full=False)[1]
 
+
     # Output: array with CD values at each time interval; CD_zero; oswald factor
     return Cl, Cd, CD_zero, oswald_factor
 
 
-print "Check the weight calculations"
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 #                               Plots
@@ -95,15 +95,15 @@ def Plots(Cl, Cd, alpha):
     # Plot CL against angle of attack
     plt.figure()
     plt.plot(alpha, Cl)
-    plt.title('CL-alpha')
-    plt.xlabel('Angle of attack [degrees]')
+    plt.title('Lift curve')
+    plt.xlabel(r'$ \alpha $ [degrees]')
     plt.ylabel('CL [-]')
     plt.show()
 
     # Plot CD against angle of attack
     plt.figure()
     plt.plot(alpha, Cd)
-    plt.title('CD-alpha')
+    plt.title('CD-\\alpha')
     plt.xlabel('Angle of attack [degrees]')
     plt.ylabel('CD [-]')
     plt.show()
@@ -111,7 +111,7 @@ def Plots(Cl, Cd, alpha):
     # Plot CL against CD
     plt.figure()
     plt.plot(Cd, Cl)
-    plt.title('CL-CD')
+    plt.title('Lift-drag polar')
     plt.xlabel('CD [-]')
     plt.ylabel('CL [-]')
     plt.show()

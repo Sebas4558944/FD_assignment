@@ -123,7 +123,9 @@ def cg():
         # Convert the x-location of the cg w.r.t. the LEMAC in percentage of MAC
         xcg_percentage = cgLEMAC_ramp_mass / c * 100.
         cg_location.append(xcg_percentage)
-
+        print "cg location from nose:", xcg_ramp_mass
+    print "total mass:", total_mass
+        
     return cg_location, total_mass
 
 
@@ -160,3 +162,6 @@ def cg_shifted():
         cg_location.append(xcg_percentage_shifted)
 
     return cg_location, total_mass_shifted
+
+q = cg()
+print q
