@@ -86,8 +86,7 @@ def sym():
     E = -Cmu*(CX0*CXa+CZ0*CZa)+Cma*(CX0*CXu+CZ0*CZu)
     R=B*C*D-A*D**2-B**2*E
     eigs = sp.roots(np.array([A,B,C,D,E]))
-    return eigs*V0/c,A,B,C,D,E,R
-
+    return eigs*V0/c
 
 
 def asym():
@@ -98,5 +97,5 @@ def asym():
     E=CL*(Clb*Cnr-Cnb*Clr)
     R=B*C*D-A*D**2-B**2*E
     eigs = sp.roots(np.array([A,B,C,D,E]))
-    return eigs*V0/b,A,B,C,D,E,R
+    return eigs*V0/b
 
