@@ -98,7 +98,7 @@ title_font = 25
 
 
 
-times, velocities, alphas, elevators, rolls, yaws, ailerons, rudders = getEigenmotions()
+indices, times, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
 ######short period (n=1): plotting speed, altitude and angle of attack against time     =
 #####dutch roll (n=2): plot yaw angle, roll angle, altitude and true airspeed           =
@@ -109,9 +109,29 @@ times, velocities, alphas, elevators, rolls, yaws, ailerons, rudders = getEigenm
 #======================================================================
 #======                     phugoid                             =======
 #======================================================================
-#x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
-#u = [de,da,dr]
 #Phugoid is a pulse on the elevator
+
+#Get Flight Data
+n=0
+ind=indices[n]
+T=times[n]
+V=velocities[n]
+A=alphas[n]
+th=pitches[n]
+roll=rolls[n]
+yaw=yaws[n]
+dA=ailerons[n]
+dR=rudders[n]
+dE=elevators[n]
+
+#set init values
+V0=V[0]
+alpha0=A[0]
+th0=th[0]
+
+SS=getStateSpace(alpha0,V0,th0)
+
+#x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
 X0 = np.matrix([[0],\
                 [0],\
                 [0],\
@@ -122,3 +142,11 @@ X0 = np.matrix([[0],\
                 [0],\
                 [0],\
                 [0]])
+#u = [de,da,dr]
+#Rudders and ailerons set to zero since this shit is symmetrical
+u_input=[]
+for i in range(len(rudders)):
+    u_input.append([rudders[n],0,0])
+u_input = np.array(u_input)
+
+response, T, state = co.lsim(SS, T = T,U = u_input)
