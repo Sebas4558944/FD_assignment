@@ -80,11 +80,10 @@ def CL(CL_CD_series1, start_weight, s):
 
     # Get CD_zero from the intersection with the y-axis
     CD_zero = np.polyfit(x, Cd, 1, full=False)[1]
-
+    print "CD0:", CD_zero
 
     # Output: array with CD values at each time interval; CD_zero; oswald factor
     return Cl, Cd, CD_zero, oswald_factor
-
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -103,7 +102,7 @@ def Plots(Cl, Cd, alpha):
     # Plot CD against angle of attack
     plt.figure()
     plt.plot(alpha, Cd)
-    plt.title('CD-\\alpha')
+    plt.title(r'CD-$ \alpha$')
     plt.xlabel('Angle of attack [degrees]')
     plt.ylabel('CD [-]')
     plt.show()
