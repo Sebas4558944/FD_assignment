@@ -51,8 +51,6 @@ date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
  El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions\
  = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')
 
-for i in range(6):
-    print convertToSec(eigenmotions[i])
     
 # eigenmotions - phugoid, short period, dutch roll,\
 # dutch roll Yd, aperiodic Roll, Spiral

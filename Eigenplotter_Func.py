@@ -58,20 +58,22 @@ def GetLists():
     yaw_list = newDict.get("Ahrs1_Pitch")
     aileron_list = newDict.get("delta_a")
     rudder_list = newDict.get("delta_r")
-    return time_list,velocity_list,altitude_list,alpha_list,elevator_list,roll_list,yaw_list,aileron_list,rudder_list, eigenmotions
+    pitch_list = newDict.get("Ahrs1_Pitch")
+    return time_list,velocity_list,altitude_list,alpha_list, pitch_list,roll_list,yaw_list,aileron_list,rudder_list, elevator_list, eigenmotions
 
 
 def getEigenmotions():
     lengths = [250.,60.,45.,30.,60.,200.]
     modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
-    time_list,velocity_list,altitude_list,alpha_list,elevator_list,roll_list,yaw_list,aileron_list,rudder_list, eigenmotions=GetLists()
+    time_list,velocity_list,altitude_list,alpha_list, pitch_list,roll_list,yaw_list,aileron_list,rudder_list, elevator_list, eigenmotions=GetLists()
     times=[]
     velocities=[]
     altitudes=[]
     alphas=[]
-    elevators=[]
     rolls=[]
     yaws=[]
+    pitches=[]
+    elevators=[]
     ailerons=[]
     rudders=[]
     for n in range(len(modes)):
@@ -85,7 +87,8 @@ def getEigenmotions():
         yaws.append(yaw_list[indices[0]:indices[-1]])
         ailerons.append(aileron_list[indices[0]:indices[-1]])
         rudders.append(rudder_list[indices[0]:indices[-1]])
-    return times, velocities, alphas, elevators, rolls, yaws, ailerons, rudders
+        pitches.append(pitch_list[indices[0]:indices[-1]])
+    return indices, times, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators
 
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time
 ######short period (n=1): plotting speed, altitude and angle of attack against time 
