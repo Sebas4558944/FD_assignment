@@ -166,7 +166,7 @@ SS=co.ss(A,B,CS,DS)
 
 #print eigenvalues A matrix
 eigenvals, eigenvectors = np.linalg.eig(A)
-#print eigenvals
+print eigenvals
 #######plotting responses
 label_font = 20
 title_font = 25
@@ -283,7 +283,7 @@ T = np.linspace(0,tmax,steps)
 #create impulse vector for t = 0 
 u_input = []
 #[de,da,dr]
-u_val = [0.0,0.01,0.01]
+u_val = [0.0,0.01,0.0]
 
 #move forcing to 0 for anything past the initial input
 for i in range(steps):
