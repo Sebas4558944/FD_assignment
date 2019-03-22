@@ -121,8 +121,8 @@ def calc_d_e_d_alpha(trim_curve_data):
 def calc_weight(start_weight, fuel_used):
     weights = [start_weight]
 
-    for i in range(1, len(fuel_used)):
-        weight_left = weights[i - 1] + float(fuel_used[i])
+    for i in range(0, len(fuel_used)):
+        weight_left = start_weight - float(fuel_used[i])
         weights.append(weight_left)
 
     return weights

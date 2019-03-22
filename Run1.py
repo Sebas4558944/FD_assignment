@@ -36,8 +36,10 @@ def CL(CL_CD_series1, start_weight, s):
     m_flow_r = CL_CD_series1[:, 6] * lbs_per_hour_to_kg_per_s
     fuel_used = CL_CD_series1[:, 7] * lbs_to_kg
     weight = calc_weight(start_weight, fuel_used)
+    
+    print "Weight is:", weight
 
-    mu = 1.6e-5
+    mu = 1.6e-5     # Dynamic viscosity
     Cl = []
     Cd = []
     x = []
@@ -53,6 +55,8 @@ def CL(CL_CD_series1, start_weight, s):
 
         true_speed = elevator.true_airspeed
         density = elevator.density
+        
+        # Get Reynolds numbers at measurements
         Rey.append(density * true_speed * c / mu)
         # Calculate CL for each time interval (and convert mass [kg] to weight [N])
         non_standard_input = [elevator.altitude, elevator.mach, delta_t[k], m_flow_l[k], m_flow_r[k]]
@@ -65,8 +69,10 @@ def CL(CL_CD_series1, start_weight, s):
         
         # Get Mach numbers at measurements
         Mach.append(elevator.calc_mach(calibrated_speed[k]))
+        
     #print "Mach range is", Mach
-    print "Reynolds range is", Rey
+    #print "Reynolds range is", Rey
+    
     # Output: array with CL values at each time interval
     # Obtain slope of CD CL^2 diagram to find the Oswald factor
     slope = np.polyfit(x, Cd, 1, full=False)[0]
@@ -79,6 +85,7 @@ def CL(CL_CD_series1, start_weight, s):
     return Cl, Cd, CD_zero, oswald_factor
 
 
+print "Check the weight calculations"
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 #                               Plots
