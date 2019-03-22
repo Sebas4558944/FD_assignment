@@ -7,7 +7,7 @@ Created on Mon Mar 04 14:59:51 2019
 import matplotlib.pyplot as plt
 import control.matlab as co
 import numpy as np
-from Cit_par import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
+from Cit_par import muc,c,hp0, V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
 CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
 
@@ -275,7 +275,7 @@ title_font = 25
 
 #############step input from t=0 to t=tstep ###################
 steps = 1000
-tmax = 100. 
+tmax = 50. 
 tstep = 0.1
 nstep = tstep/(tmax/float(steps))
 T = np.linspace(0,tmax,steps)
@@ -283,7 +283,7 @@ T = np.linspace(0,tmax,steps)
 #create impulse vector for t = 0 
 u_input = []
 #[de,da,dr]
-u_val = [0.0,0.0,0.01]
+u_val = [0.0,0.01,0.01]
 
 #move forcing to 0 for anything past the initial input
 for i in range(steps):
@@ -303,7 +303,11 @@ theta = response[:,2]
 psi = response[:,3]
 phi = response[:,4]
 
-plt.figure()
+for i in range(len(u)):
+    u[i] = u[i]+V0
+    h[i] = h[i]+hp0
+    
+#plt.figure()
 plt.subplot(231)
 plt.xlabel("Time [sec]", fontsize = label_font)
 plt.ylabel("Velocity [m/s]", fontsize = label_font)
