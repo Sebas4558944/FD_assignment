@@ -95,6 +95,8 @@ def getStateSpace(alpha0,V0,th0):
 #######plotting vars
 label_font = 20
 title_font = 25
+reallabel='real'
+fakelabel='fake'
 modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
 
 plotting=[True]*6
@@ -159,8 +161,8 @@ if plotting[n]:
     plt.subplot(221)
     plt.xlabel("Time [sec]", fontsize = label_font)
     plt.ylabel("Velocity [m/s]", fontsize = label_font)
-    plt.plot(T,speed_out, label='fake')
-    plt.plot(time, V, label='real')
+    plt.plot(T,speed_out, label=fakelabel)
+    plt.plot(time, V, label=reallabel)
     plt.legend()
     
     plt.subplot(222)
@@ -178,7 +180,6 @@ if plotting[n]:
     plt.subplot(224)
     plt.xlabel("Time [sec]", fontsize = label_font)
     plt.ylabel("Elevator [rad]", fontsize = label_font)
-    plt.plot(T,dE)
     plt.plot(time, dE)
     
     plt.suptitle(modes[n], fontsize = title_font)  
@@ -236,8 +237,8 @@ if plotting[n]:
     plt.subplot(221)
     plt.xlabel("Time [sec]", fontsize = label_font)
     plt.ylabel("Velocity [m/s]", fontsize = label_font)
-    plt.plot(T,speed_out, label='fake')
-    plt.plot(time, V, label='real')
+    plt.plot(T,speed_out, label=fakelabel)
+    plt.plot(time, V, label=reallabel)
     plt.legend()
     
     plt.subplot(222)
@@ -255,7 +256,6 @@ if plotting[n]:
     plt.subplot(224)
     plt.xlabel("Time [sec]", fontsize = label_font)
     plt.ylabel("Elevator [rad]", fontsize = label_font)
-    plt.plot(T,dE)
     plt.plot(time, dE)
     
     plt.suptitle(modes[n], fontsize = title_font)  
@@ -288,12 +288,12 @@ if plotting[n]:
     
     SS=getStateSpace(alpha0,V0,th0)
     
-    #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
+    #x = [u,alhpa,theta,q,h,beta,psi (roll),p,r,phi]
     #u = [de,da,dr]
     #Rudders and ailerons set to zero since this shit is symmetrical
     u_input=[]
     for i in range(len(dE)):
-        u_input.append([-dE[i],0.,0.])
+        u_input.append([0.,-dA[i],-dR[i]])
         
     response, T, state = co.lsim(SS, T = time,U = u_input)
     
@@ -310,30 +310,40 @@ if plotting[n]:
         theta_out[i] = theta_out[i]+th0
         
     plt.figure()
-    plt.subplot(221)
+    plt.subplot(231)
     plt.xlabel("Time [sec]", fontsize = label_font)
     plt.ylabel("Velocity [m/s]", fontsize = label_font)
-    plt.plot(T,speed_out, label='fake')
-    plt.plot(time, V, label='real')
+    plt.plot(T,speed_out, label=fakelabel)
+    plt.plot(time, V, label=reallabel)
     plt.legend()
     
-    plt.subplot(222)
+    plt.subplot(232)
     plt.xlabel("Time [sec]", fontsize = label_font)
     plt.ylabel("Altitude [m]", fontsize = label_font)
     plt.plot(T,h_out)
     plt.plot(time, h)
     
-    plt.subplot(223)
+    plt.subplot(233)
     plt.xlabel("Time [sec]", fontsize = label_font)
-    plt.ylabel("Pitch angle [rad]", fontsize = label_font)
-    plt.plot(T,theta_out)
-    plt.plot(time, th)
+    plt.ylabel("Yaw angle [rad]", fontsize = label_font)
+    plt.plot(T,phi_out)
+    plt.plot(time, yaw)
     
-    plt.subplot(224)
+    plt.subplot(234)
     plt.xlabel("Time [sec]", fontsize = label_font)
-    plt.ylabel("Elevator [rad]", fontsize = label_font)
-    plt.plot(T,dE)
-    plt.plot(time, dE)
+    plt.ylabel("Roll Angle [rad]", fontsize = label_font)
+    plt.plot(T,psi_out)
+    plt.plot(time, roll)
+    
+    plt.subplot(235)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Rudder Angle [rad]", fontsize = label_font)
+    plt.plot(time, dR)
+    
+    plt.subplot(236)
+    plt.xlabel("Time [sec]", fontsize = label_font)
+    plt.ylabel("Aileron Angle [rad]", fontsize = label_font)
+    plt.plot(time, dA)
     
     plt.suptitle(modes[n], fontsize = title_font)  
     plt.show()
