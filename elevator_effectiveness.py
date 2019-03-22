@@ -2,6 +2,7 @@ from Cit_par import *
 from reduced_condition_calculator import Conditions
 from datareader import importExcelData, ThrustingAllDayEveryday
 from conversion_helpers import *
+from mass_and_balance_input import cg, cg_shifted, dist_to_lemac, mac_length
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -120,15 +121,12 @@ def calc_d_e_d_alpha(trim_curve_data):
 
 def calc_weight(start_weight, fuel_used):
     weights = [start_weight]
-    fuel = [2800]
 
     for i in range(0, len(fuel_used)):
         weight_left = start_weight - float(fuel_used[i]) * lbs_to_kg
         weights.append(weight_left)
-        fuel_left = 2800 - float(fuel_used[i])
-        fuel.append(fuel_left)
 
-    return weights, fuel
+    return weights
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -140,14 +138,15 @@ trim_curve, old_cg, new_cg, cg_measurements = importExcelData(f_2)[12], importEx
                                               importExcelData(f_2)[15], importExcelData(f_2)[16]
 
 starting_weight = (9165. * lbs_to_kg + 2800. * lbs_to_kg + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 80.)
-cg_start = 288. * inch_to_m
-cg_end = 150. * inch_to_m
-print cg_start
-print cg_end
+cg = cg()
+cg_shift = cg_shifted()
+
+cg_start = (dist_to_lemac + (cg[0][3]/100)*mac_length)*inch_to_m
+cg_end = (dist_to_lemac + (cg_shift[0][0]/100)*mac_length)*inch_to_m
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-cg_weight, fuel_cg_weight = calc_weight(starting_weight, [1053., 1082])
+cg_weight = calc_weight(starting_weight, [1053., 1082])
 elevator_effectiveness = Elevator(cg_measurements[0][2] * ft_to_m, cg_measurements[0][3] * kts_to_ms,
                                   cg_measurements[0][11] + celsius_to_kelvin, cg_weight[0])
 
@@ -166,7 +165,7 @@ delta = []
 speed = []
 alpha = []
 stick_force = []
-weight_values, fuel_values = calc_weight(starting_weight, list(trim_curve[:, -2]))
+weight_values = calc_weight(starting_weight, list(trim_curve[:, -2]))
 
 for j in range(len(trim_curve)):
     m_flow_l = trim_curve[j][8] * lbs_per_hour_to_kg_per_s
@@ -190,47 +189,46 @@ print "c_n equals : " + str(c_n)
 print "cm_delta equals : " + str(cm_delta)
 print "dcm equals : " + str(difference_cm)
 print "cm_alpha equals : " + str(cm_alpha)
-print "The masses are : " + str(cg_weight)
-print "The remaining fuel equals : " + str(fuel_cg_weight)
+# print "The aircraft mass at measurements were : " + str(cg_weight)
 # print "The airspeed is : " + str(speed)
 # print "The angle of attack is : " + str(alpha)
 # print "The elevator angle is : " + str(delta)
 # print "The stick force is : " + str(stick_force)
 
-# z1 = np.polyfit(speed, delta, 2)
-# p1 = np.poly1d(z1)
-#
-# z2 = np.polyfit(alpha, delta, 1)
-# p2 = np.poly1d(z2)
-#
-# z3 = np.polyfit(speed, stick_force, 2)
-# p3 = np.poly1d(z3)
-#
-# speed.sort()
-# alpha.sort()
-#
-# plt.figure(1)
-# pylab.plot(speed, p1(speed))
-# plt.gca().invert_yaxis()
-# plt.xlabel("Reduced equivalent velocity [m/s]")
-# plt.ylabel("Reduced elevator deflection [degrees]")
-# plt.title("Elevator-trim curve")
-# plt.savefig("Elevator-trim curve")
-#
-# plt.figure(2)
-# pylab.plot(alpha, p2(alpha))
-# plt.gca().invert_yaxis()
-# plt.xlabel("Angle of attack [degrees]")
-# plt.ylabel("Reduced elevator deflection [degrees]")
-# plt.title("Elevator trim curve")
-# plt.savefig("Elevator vs Alpha")
-#
-# plt.figure(3)
-# pylab.plot(speed, p3(speed))
-# plt.gca().invert_yaxis()
-# plt.xlabel("Reduced equivalent velocity [m/s]")
-# plt.ylabel("Reduced stick-force [N]")
-# plt.title("Control-force curve")
-# plt.savefig("Elevator control-force curve")
-#
-# plt.show()
+z1 = np.polyfit(speed, delta, 2)
+p1 = np.poly1d(z1)
+
+z2 = np.polyfit(alpha, delta, 1)
+p2 = np.poly1d(z2)
+
+z3 = np.polyfit(speed, stick_force, 2)
+p3 = np.poly1d(z3)
+
+speed.sort()
+alpha.sort()
+
+plt.figure(1)
+pylab.plot(speed, p1(speed))
+plt.gca().invert_yaxis()
+plt.xlabel("Reduced equivalent velocity [m/s]")
+plt.ylabel("Reduced elevator deflection [degrees]")
+plt.title("Elevator-trim curve")
+plt.savefig("Elevator-trim curve")
+
+plt.figure(2)
+pylab.plot(alpha, p2(alpha))
+plt.gca().invert_yaxis()
+plt.xlabel("Angle of attack [degrees]")
+plt.ylabel("Reduced elevator deflection [degrees]")
+plt.title("Elevator trim curve")
+plt.savefig("Elevator vs Alpha")
+
+plt.figure(3)
+pylab.plot(speed, p3(speed))
+plt.gca().invert_yaxis()
+plt.xlabel("Reduced equivalent velocity [m/s]")
+plt.ylabel("Reduced stick-force [N]")
+plt.title("Control-force curve")
+plt.savefig("Elevator control-force curve")
+
+plt.show()
