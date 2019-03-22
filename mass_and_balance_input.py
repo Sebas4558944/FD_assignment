@@ -19,6 +19,8 @@ from datareader import *
 # The first entry is the mass of the empty aircraft in lbs
 # The second entry is the moment due to the empty aircraft [lbs-inch]
 oew = [9165, 2677847.5]
+mac_length = 80.98  # inch
+dist_to_lemac = 261.56  # inch
 
 #                               Fuel
 # -----------------------------------------------------------------------------
@@ -107,6 +109,7 @@ def cg():
     zero_fuel_mass = [oew[0]*lbs_to_kg + sum(Payload[:, 1]), oew[1]*lbs_to_kg*inch_to_m + sum(Payload[:, 2])]
 
     total_mass = []
+    cg_location = []
 
     for i in range(len(fuelload)):
         ramp_mass = [zero_fuel_mass[0] + fuelload[i, 0], zero_fuel_mass[1] + fuelload[i, 1]]
@@ -116,12 +119,12 @@ def cg():
 
         # Obtain the x-location of the cg w.r.t. the LEMAC of the aircraft, in meters
         cgLEMAC_ramp_mass = xcg_ramp_mass + datum_to_LEMAC
-        print "ramp mass xcg : " + str(xcg_ramp_mass)
 
         # Convert the x-location of the cg w.r.t. the LEMAC in percentage of MAC
         xcg_percentage = cgLEMAC_ramp_mass / c * 100.
+        cg_location.append(xcg_percentage)
 
-    return xcg_percentage, total_mass
+    return cg_location, total_mass
 
 
 # -----------------------------------------------------------------------------
@@ -140,6 +143,7 @@ def cg_shifted():
     zero_fuel_mass_shifted = [oew[0]*lbs_to_kg + sum(Payload_shifted[:, 1]), oew[1]*lbs_to_kg*inch_to_m + sum(Payload_shifted[:, 2])]
 
     total_mass_shifted = []
+    cg_location = []
 
     for i in range(len(fuelload_shifted)):
         ramp_mass_shifted = [zero_fuel_mass_shifted[0] + fuelload_shifted[i, 0], zero_fuel_mass_shifted[1] + fuelload_shifted[i, 1]]
@@ -151,16 +155,8 @@ def cg_shifted():
         # Obtain the x-location of the cg w.r.t. the LEMAC of the aircraft, in meters
         cgLEMAC_ramp_mass_shifted = xcg_ramp_mass_shifted + datum_to_LEMAC
 
-        print "ramp mass shifted xcg : " + str(xcg_ramp_mass_shifted)
         # Convert the x-location of the cg w.r.t. the LEMAC in percentage of MAC
         xcg_percentage_shifted = cgLEMAC_ramp_mass_shifted / c * 100.
+        cg_location.append(xcg_percentage_shifted)
 
-    return xcg_percentage_shifted, total_mass_shifted
-
-
-cg_shift = cg_shifted()
-cg_regular = cg()
-
-print cg_regular
-
-print cg_shift
+    return cg_location, total_mass_shifted
