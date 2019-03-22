@@ -160,13 +160,13 @@ CS = np.matrix([[1,0,0,0,0,0,0,0,0,0],\
 DS = np.zeros((5,3))
 #
 ##init ss
-SSS=co.ss(A,B,CS,DS)
+SS=co.ss(A,B,CS,DS)
 
-h = co.tf(SSS)
+#h = co.tf(SS)
 
 #print eigenvalues A matrix
 eigenvals, eigenvectors = np.linalg.eig(A)
-print eigenvals
+#print eigenvals
 #######plotting responses
 label_font = 20
 title_font = 25
@@ -184,7 +184,7 @@ title_font = 25
 #                [0],\
 #                [0]])
 #
-#response, T = co.initial(SSS, T = T,X0 = X0)
+#response, T = co.initial(SS, T = T,X0 = X0)
 ##plotting u,h,theta,psi,phi
 #u = response[:,0]
 #h = response[:,1]
@@ -236,7 +236,7 @@ title_font = 25
 #u = np.array(u)
 #
 ##calculate response
-#response, T, state = co.lsim(SSS, T = T,U = u)
+#response, T, state = co.lsim(SS, T = T,U = u)
 #
 ##plotting u,h,theta,psi,phi
 #u = response[:,0]
@@ -294,7 +294,7 @@ for i in range(steps):
 u_input = np.array(u_input)
 
 #calculate response
-response, T, state = co.lsim(SSS, T = T,U = u_input)
+response, T, state = co.lsim(SS, T = T,U = u_input)
 
 #plotting u,h,theta,psi,phi
 u = response[:,0]
