@@ -11,25 +11,13 @@ import subprocess
 
 def convertToSec(time):
     splitTime=time.split(':')
-    try:
-        if splitTime[2]=='00':
-            if splitTime[0]=='01':
-                h=int(splitTime[0])
-                m=int(splitTime[1])
-                s=int(splitTime[2])
-            else:
-                h=0
-                m=int(splitTime[0])
-                s=int(splitTime[1])
-        else:
-            h=int(splitTime[0])
-            m=int(splitTime[1])
-            s=int(splitTime[2])
-    except IndexError:
-            h=0
-            m=int(splitTime[0])
-            s=int(splitTime[1])
-    t=3600*h+60*m+s
+    if splitTime[0]!='':
+        h=splitTime[0]
+        m=splitTime[1]
+        s=splitTime[2]
+        t=3600*int(h)+60*int(m)+int(s)
+    else:
+        t=''
     return t
 
 def convertToTimeStr(h,m,s): #hh:mm:ss format
@@ -214,12 +202,12 @@ def fixList(fixthislist):
 #%%
 #    Test functions
 #    
-#f='Reference_Datasheet.csv'
-date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
-, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
- El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
- = importExcelData('Reference_Datasheet.csv')
-    
+##f='Reference_Datasheet.csv'
+#date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
+#, passengerPos, blockfuel, ACC_CLCD, CL_CD_series1, CL_CD_series2, ACC_Trim,\
+# El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions \
+# = importExcelData('Reference_Datasheet.csv')
+#    
 # print eigenmotions[0]
 # print convertToSec(eigenmotions[0])
 # print convertToTimeStr(0,0,convertToSec(eigenmotions[0]))
