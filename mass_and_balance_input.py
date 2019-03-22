@@ -16,22 +16,22 @@ from datareader import *
 # -----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
 
-# The first entry is the mass of the empty aircraft in pounds
-# The second entry is the moment due to the empty aircraft
+# The first entry is the mass of the empty aircraft in lbs
+# The second entry is the moment due to the empty aircraft [lbs-inch]
 oew = [9165, 2677847.5]
 
 #                               Fuel
 # -----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
 
-# Import the mass of the fuel burnt since take-off
+# Import the mass of the fuel burnt since take-off in lbs
 fuel = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')[12][:, -2]
 fuel_shifted = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')[16][:, 10]
 
 # Mass of the fuel at start of flight, in lbs
 start_fuel = 2800.
 
-# Get a list of the mass of the fuel at start of engines minus the mass of the burnt fuel, in lbs
+# Get a list of the mass of the fuel at start of engines minus the mass of the burnt fuel, in kg
 init_fuel = np.full((1, len(fuel)), start_fuel)
 fuel_load = np.array((init_fuel - fuel) * lbs_to_kg)
 p = np.transpose(fuel_load)
@@ -48,9 +48,8 @@ mfuel_shifted = np.array([[4990.32], [4907.79]])
 fuelmoment = np.array(mfuel * inch_to_m * lbs_to_kg)
 fuelmoment_shifted = np.array(mfuel_shifted * inch_to_m * lbs_to_kg)
 
-# The first entry is the mass of the fuel in pounds
-# The second entry is the moment due to the fuel
-
+# The first entry is the mass of the fuel in kg
+# The second entry is the moment due to the fuel in Nm
 fuelload = np.hstack((p, fuelmoment))
 fuelload_shifted = np.hstack((q, fuelmoment_shifted))
 
@@ -84,6 +83,7 @@ seat8_shifted = [134., 82.]
 pay_shifted = [seat1, seat2, seat3, seat4, seat5, seat6, seat7, seat8_shifted, seat9, seat10]
 payload_shifted = np.array(pay_shifted)
 
+# Convert locations from inch to m
 payload[:, 0] = payload[:, 0] * inch_to_m
 payload_shifted[:, 0] = payload_shifted[:, 0] * inch_to_m
 
@@ -104,21 +104,19 @@ def cg():
         payl[i] = payload[i, 0] * payload[i, 1]
 
     Payload = np.hstack((payload, payl))
-
-    zero_fuel_mass = [oew[0] + sum(Payload[:, 1]), oew[1] + sum(Payload[:, 2])]
-    print zero_fuel_mass
+    zero_fuel_mass = [oew[0]*lbs_to_kg + sum(Payload[:, 1]), oew[1]*lbs_to_kg*inch_to_m + sum(Payload[:, 2])]
 
     total_mass = []
 
     for i in range(len(fuelload)):
         ramp_mass = [zero_fuel_mass[0] + fuelload[i, 0], zero_fuel_mass[1] + fuelload[i, 1]]
         total_mass.append(ramp_mass[0])
-        # Obtain the x-location of the cg w.r.t. the nose of the aircraft, in inches
+        # Obtain the x-location of the cg w.r.t. the nose of the aircraft, in meters
         xcg_ramp_mass = ramp_mass[1] / ramp_mass[0]
 
         # Obtain the x-location of the cg w.r.t. the LEMAC of the aircraft, in meters
         cgLEMAC_ramp_mass = xcg_ramp_mass + datum_to_LEMAC
-        print "ramp mass xcg : " + str(xcg_ramp_mass * inch_to_m)
+        print "ramp mass xcg : " + str(xcg_ramp_mass)
 
         # Convert the x-location of the cg w.r.t. the LEMAC in percentage of MAC
         xcg_percentage = cgLEMAC_ramp_mass / c * 100.
@@ -138,23 +136,22 @@ def cg_shifted():
         payl_shifted[i] = payload_shifted[i, 0] * payload_shifted[i, 1]
 
     Payload_shifted = np.hstack((payload_shifted, payl_shifted))
-    print  "pay: ", Payload_shifted
-    zero_fuel_mass = [oew[0] + sum(Payload_shifted[:, 1]), oew[1] + sum(Payload_shifted[:, 2])]
-    print zero_fuel_mass
+
+    zero_fuel_mass_shifted = [oew[0]*lbs_to_kg + sum(Payload_shifted[:, 1]), oew[1]*lbs_to_kg*inch_to_m + sum(Payload_shifted[:, 2])]
 
     total_mass_shifted = []
 
     for i in range(len(fuelload_shifted)):
-        ramp_mass_shifted = [zero_fuel_mass[0] + fuelload_shifted[i, 0], zero_fuel_mass[1] + fuelload_shifted[i, 1]]
+        ramp_mass_shifted = [zero_fuel_mass_shifted[0] + fuelload_shifted[i, 0], zero_fuel_mass_shifted[1] + fuelload_shifted[i, 1]]
         total_mass_shifted.append(ramp_mass_shifted[0])
 
-        # Obtain the x-location of the cg w.r.t. the nose of the aircraft, in inches
+        # Obtain the x-location of the cg w.r.t. the nose of the aircraft, in meters
         xcg_ramp_mass_shifted = ramp_mass_shifted[1] / ramp_mass_shifted[0]
 
         # Obtain the x-location of the cg w.r.t. the LEMAC of the aircraft, in meters
         cgLEMAC_ramp_mass_shifted = xcg_ramp_mass_shifted + datum_to_LEMAC
 
-        print "ramp mass shifted xcg : " + str(xcg_ramp_mass_shifted * inch_to_m)
+        print "ramp mass shifted xcg : " + str(xcg_ramp_mass_shifted)
         # Convert the x-location of the cg w.r.t. the LEMAC in percentage of MAC
         xcg_percentage_shifted = cgLEMAC_ramp_mass_shifted / c * 100.
 
