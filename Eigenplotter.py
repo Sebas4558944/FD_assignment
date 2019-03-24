@@ -51,11 +51,12 @@ date_of_flight, flight_number, TO_time, LND_time, passengerMass, passengerNames\
  El_Trim_Curve, name_shifted, pos_shifted, newpos_shifted, Cg_shift, eigenmotions\
  = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')
 
+    
 # eigenmotions - phugoid, short period, dutch roll,\
 # dutch roll Yd, aperiodic Roll, Spiral
 lengths = [200.,60.,45.,30.,60.,200.]
 modes = ["Phugoid", "short period", "dutch roll","dutch roll Yd", "aperiodic Roll", "Spiral" ]
-plotting = [True, False, False, False, False, False]
+plotting = [True,True,True,True,True,True]
 label_font = 20
 title_font = 25
 
@@ -80,7 +81,6 @@ if plotting[4] or plotting[5]:
 n = 0
 if plotting[n]:
     indices = time_stamps(n)    
-
     plt.figure()    
     ax1 = plt.subplot(221)
     plt.xlim(time_list[indices[0]]-0.1*lengths[n],time_list[indices[-1]])

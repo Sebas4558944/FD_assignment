@@ -18,7 +18,7 @@ CL_CD_series1 = importExcelData('Post_Flight_Datasheet_13_03_V2.csv')[9]
 #                               Weight calculations
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
-weight_zero = (9165. + 2800. + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 80.)
+weight_zero = (9165.*lbs_to_kg + 2800.*lbs_to_kg + 89. + 82. + 70. + 62. + 74. + 65. + 80. + 82. + 80.)
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 #                               CL calculations
@@ -80,12 +80,11 @@ def CL(CL_CD_series1, start_weight, s):
 
     # Get CD_zero from the intersection with the y-axis
     CD_zero = np.polyfit(x, Cd, 1, full=False)[1]
+    print "CD0:", CD_zero
 
     # Output: array with CD values at each time interval; CD_zero; oswald factor
     return Cl, Cd, CD_zero, oswald_factor
 
-
-print "Check the weight calculations"
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 #                               Plots
@@ -95,25 +94,25 @@ def Plots(Cl, Cd, alpha):
     # Plot CL against angle of attack
     plt.figure()
     plt.plot(alpha, Cl)
-    plt.title('CL-alpha')
-    plt.xlabel('Angle of attack [degrees]')
-    plt.ylabel('CL [-]')
+    plt.title('Lift curve')
+    plt.xlabel(r'$ \alpha $ [degrees]')
+    plt.ylabel(r'$C_L$ [-]')
     plt.show()
 
     # Plot CD against angle of attack
     plt.figure()
     plt.plot(alpha, Cd)
-    plt.title('CD-alpha')
-    plt.xlabel('Angle of attack [degrees]')
-    plt.ylabel('CD [-]')
+    plt.title(r'CD-$ \alpha$')
+    plt.xlabel(r'$ \alpha $ [degrees]')
+    plt.ylabel(r'$C_D$ [-]')
     plt.show()
 
     # Plot CL against CD
     plt.figure()
     plt.plot(Cd, Cl)
-    plt.title('CL-CD')
-    plt.xlabel('CD [-]')
-    plt.ylabel('CL [-]')
+    plt.title('Lift-drag polar')
+    plt.xlabel(r'$C_D$ [-]')
+    plt.ylabel(r'$C_L$ [-]')
     plt.show()
     return
 

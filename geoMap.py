@@ -29,7 +29,7 @@ for i in range(len(lat)):
     latsum+=lat[i][0]
     lonsum+=lon[i][0]
     length+=1
-    h.append(ha[i][0])
+    h.append(ha[i][0]*0.3048)
     latnew.append(lat[i][0])
     lonnew.append(lon[i][0])
 latavg=latsum/length
@@ -40,7 +40,7 @@ lonavg=lonsum/length
 #            width=5E5,height=5E5)
 #m.etopo(scale=0.5);
 #%%
-plotSchematic=False
+plotSchematic=True
 if plotSchematic:
     hsize=5
     vsize=5
@@ -55,7 +55,7 @@ if plotSchematic:
     m.drawmapboundary(fill_color='#FFFFFF')
     x,y=m(lonnew,latnew)                  
     m.plot(x,y,color='red')
-
+print(max(h))
 plot3Dline=True
 if plot3Dline:
     R=6371*10^3
