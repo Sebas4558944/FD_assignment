@@ -63,7 +63,7 @@ def GetLists():
 
 
 def getEigenmotions():
-    lengths = [150.,30.,45.,30.,60.,200.]
+    lengths = [150.,30.,45.,30.,20.,160.]
     modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
     time_list,velocity_list,altitude_list,alpha_list, pitch_list,roll_list,yaw_list,aileron_list,rudder_list, elevator_list, eigenmotions=GetLists()
     times=[]
