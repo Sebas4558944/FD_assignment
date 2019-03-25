@@ -99,6 +99,7 @@ reallabel='real'
 fakelabel='fake'
 modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
 
+#Plots modes
 plotting=[True]*6
 
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
