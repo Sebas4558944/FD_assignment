@@ -212,5 +212,4 @@ def fixList(fixthislist):
 # print convertToSec(eigenmotions[0])
 # print convertToTimeStr(0,0,convertToSec(eigenmotions[0]))
 
-# keylist,desclist,unitlist,newDict=getFDValues('reference.mat')
-#print convertToSec("01:00:00")
+#keylist,desclist,unitlist,newDict=getFDValues('FlightData.mat')    

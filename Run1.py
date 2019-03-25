@@ -96,23 +96,23 @@ def Plots(Cl, Cd, alpha):
     plt.plot(alpha, Cl)
     plt.title('Lift curve')
     plt.xlabel(r'$ \alpha $ [degrees]')
-    plt.ylabel('CL [-]')
+    plt.ylabel(r'$C_L$ [-]')
     plt.show()
 
     # Plot CD against angle of attack
     plt.figure()
     plt.plot(alpha, Cd)
     plt.title(r'CD-$ \alpha$')
-    plt.xlabel('Angle of attack [degrees]')
-    plt.ylabel('CD [-]')
+    plt.xlabel(r'$ \alpha $ [degrees]')
+    plt.ylabel(r'$C_D$ [-]')
     plt.show()
 
     # Plot CL against CD
     plt.figure()
     plt.plot(Cd, Cl)
     plt.title('Lift-drag polar')
-    plt.xlabel('CD [-]')
-    plt.ylabel('CL [-]')
+    plt.xlabel(r'$C_D$ [-]')
+    plt.ylabel(r'$C_L$ [-]')
     plt.show()
     return
 
