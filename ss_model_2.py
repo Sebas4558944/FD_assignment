@@ -222,7 +222,7 @@ for n in range(6):
             dA0=dA[0]
             dR0=dR[0]
             for i in range(len(dE)):
-                u_input.append([0.,(-dA[i]-dA0),(dR[i]-dR0)])
+                u_input.append([0.,-(dA[i]-dA0),(dR[i]-dR0)])
                 
             response, T, state = co.lsim(SS, T = time,U = u_input)
             responseF, TF, stateF = co.lsim(SSF, T = time,U = u_input)
