@@ -119,7 +119,7 @@ asymNamesList=asym.split(',')
 label_font = 20
 title_font = 25
 
-plotSym=1
+plotSym=0
 plotAsym=1
 
 if plotSym:
@@ -134,7 +134,7 @@ if plotSym:
         #############step input from t=0 to t=tstep ###################
         steps = 1000*4
         tmax = 100.*4
-        tstep = 10. #1 sec step input
+        tstep = 10. #10 sec step input
         nstep = tstep/(tmax/float(steps))
         T = np.linspace(0,tmax,steps)
         
@@ -204,7 +204,7 @@ if plotAsym:
         #############step input from t=0 to t=tstep ###################
         steps = 1000*5
         tmax = 100.*5. 
-        tstep = 1. #1 sec step input
+        tstep = 10. #10 sec step input
         nstep = tstep/(tmax/float(steps))
         T = np.linspace(0,tmax,steps)
         
