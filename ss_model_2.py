@@ -9,13 +9,19 @@ import control.matlab as co
 import numpy as np
 from Eigenplotter_Func import getEigenmotions
 
-def getStateSpace(alpha0,V0,th0):
-# combining state vectors gives:
-#x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
-#u = [de,da,dr]
-    from Cit_par import muc,c,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
-    CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
-    CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr
+def getStateSpace(alpha0,V0,th0,changed):
+    # combining state vectors gives:
+    #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
+    #u = [de,da,dr]
+    #Changed indicates whether the default or the changed cit_par is used
+    if changed==1:
+        from Cit_par import muc,c,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
+        CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
+        CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr
+    else:
+        from Cit_par_default import muc,c,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
+        CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
+        CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr
     C1S=np.matrix([[-2.*muc*c/(V0**2), 0., 0., 0., 0., 0. ,0., 0., 0., 0.],\
                    [0., (CZadot - 2. * muc) * c/V0, 0., 0. ,0., 0., 0., 0., 0., 0.],\
                    [0., 0., -c/V0, 0.,  0., 0. ,0., 0., 0., 0.],\
@@ -95,9 +101,10 @@ def getStateSpace(alpha0,V0,th0):
 #######plotting vars
 label_font = 20
 title_font = 25
-reallabel='real'
-fakelabel='fake'
-modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
+reallabel='FlightData'
+fakelabel='Model Data with Original Paramters'
+fixedfakelabel='Model Data with Adapted Parameters'
+modes = ["Phugoid", "Short Period", "Dutch Roll","Dutch Roll Yd", "Aperiodic Roll", "Spiral" ]
 
 #Plots modes
 plotting=[True]*6
@@ -115,7 +122,6 @@ indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, 
 #======                     phugoid                             =======
 #======================================================================
 #Phugoid is a pulse on the elevator
-n=0
 for n in range(6):
     if plotting[n]:
         #Get Flight Data
@@ -137,7 +143,9 @@ for n in range(6):
         th0=th[0]
         hp0=h[0]
         
-        SS=getStateSpace(alpha0,V0,th0)
+        SS=getStateSpace(alpha0,V0,th0,0) #Default Values State Space
+        SSF=getStateSpace(alpha0,V0,th0,1) #Fixed State Space 
+        
         if n==0 or n==1: #Sym
             #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
             #u = [de,da,dr]
@@ -148,6 +156,7 @@ for n in range(6):
                 u_input.append([(dE[i]-dE0),0.,0.])
                 
             response, T, state = co.lsim(SS, T = time,U = u_input)
+            responseF, TF, stateF = co.lsim(SSF, T = time,U = u_input)
             
             #plotting u,h,theta,psi(roll),phi(yaw)
             speed_out = response[:,0]
@@ -156,35 +165,52 @@ for n in range(6):
             psi_out = response[:,3]
             phi_out = response[:,4]
             
+            speed_outF = responseF[:,0]
+            h_outF = responseF[:,1]
+            theta_outF = responseF[:,2]
+            psi_outF = responseF[:,3]
+            phi_outF = responseF[:,4]
+            
             for i in range(len(speed_out)):
                 speed_out[i] = speed_out[i]+V0
                 h_out[i] = h_out[i]+hp0
                 theta_out[i] = theta_out[i]+th0
                 
+                speed_outF[i] = speed_outF[i]+V0
+                h_outF[i] = h_outF[i]+hp0
+                theta_outF[i] = theta_outF[i]+th0
+                
             plt.figure()
             plt.subplot(221)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Velocity [m/s]", fontsize = label_font)
             plt.plot(T,speed_out, label=fakelabel)
+            plt.plot(TF,speed_outF, label=fixedfakelabel)
             plt.plot(time, V, label=reallabel)
             plt.legend()
             
             plt.subplot(222)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Altitude [m]", fontsize = label_font)
-            plt.plot(T,h_out)
-            plt.plot(time, h)
+            plt.plot(T,h_out, label=fakelabel)
+            plt.plot(TF,h_outF, label=fixedfakelabel)
+            plt.plot(time, h, label=reallabel)
             
             plt.subplot(223)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Pitch angle [rad]", fontsize = label_font)
-            plt.plot(T,theta_out)
-            plt.plot(time, th)
+            plt.plot(T,theta_out, label=fakelabel)
+            plt.plot(TF,theta_outF, label=fixedfakelabel)
+            plt.plot(time, th, label=reallabel)
             
             plt.subplot(224)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Elevator [rad]", fontsize = label_font)
-            plt.plot(time, dE)
+            plt.plot(time, dE, label=reallabel)
             
             plt.suptitle(modes[n], fontsize = title_font)  
             plt.show()
@@ -200,6 +226,7 @@ for n in range(6):
                 u_input.append([0.,(dA[i]-dA0),(dR[i]-dR0)])
                 
             response, T, state = co.lsim(SS, T = time,U = u_input)
+            responseF, TF, stateF = co.lsim(SSF, T = time,U = u_input)
             
             #plotting u,h,theta,psi(roll),phi(yaw)
             speed_out = response[:,0]
@@ -208,46 +235,66 @@ for n in range(6):
             psi_out = response[:,3]
             phi_out = response[:,4]
             
+            speed_outF = responseF[:,0]
+            h_outF = responseF[:,1]
+            theta_outF = responseF[:,2]
+            psi_outF = responseF[:,3]
+            phi_outF = responseF[:,4]
+            
             for i in range(len(speed_out)):
                 speed_out[i] = speed_out[i]+V0
                 h_out[i] = h_out[i]+hp0
                 theta_out[i] = theta_out[i]+th0
                 
+                speed_outF[i] = speed_outF[i]+V0
+                h_outF[i] = h_outF[i]+hp0
+                theta_outF[i] = theta_outF[i]+th0
+                
             plt.figure()
             plt.subplot(231)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Velocity [m/s]", fontsize = label_font)
             plt.plot(T,speed_out, label=fakelabel)
+            plt.plot(TF,speed_outF, label=fixedfakelabel)
             plt.plot(time, V, label=reallabel)
             plt.legend()
             
             plt.subplot(232)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Altitude [m]", fontsize = label_font)
-            plt.plot(T,h_out)
-            plt.plot(time, h)
+            plt.plot(T,h_out, label=fakelabel)
+            plt.plot(TF,h_outF, label=fixedfakelabel)
+            plt.plot(time, h, label=reallabel)
             
             plt.subplot(233)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Yaw angle [rad]", fontsize = label_font)
-            plt.plot(T,phi_out)
-            plt.plot(time, yaw)
+            plt.plot(T,phi_out, label=fakelabel)
+            plt.plot(TF,phi_outF, label=fixedfakelabel)
+            plt.plot(time, yaw, label=reallabel)
             
             plt.subplot(234)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Roll Angle [rad]", fontsize = label_font)
-            plt.plot(T,psi_out)
-            plt.plot(time, roll)
+            plt.plot(T,psi_out, label=fakelabel)
+            plt.plot(TF,psi_outF, label=fixedfakelabel)
+            plt.plot(time, roll, label=reallabel)
             
             plt.subplot(235)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Rudder Angle [rad]", fontsize = label_font)
-            plt.plot(time, dR)
+            plt.plot(time, dR, label=reallabel)
             
             plt.subplot(236)
+            plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Aileron Angle [rad]", fontsize = label_font)
-            plt.plot(time, dA)
+            plt.plot(time, dA, label=reallabel)
             
             plt.suptitle(modes[n], fontsize = title_font)  
             plt.show()
