@@ -98,6 +98,7 @@ def getStateSpace(alpha0,V0,th0,changed):
     #print eigenvalues A matrix
     eigenvals, eigenvectors = np.linalg.eig(A)
     print eigenvals, changed
+
     return SS
 
 #######plotting vars
