@@ -99,7 +99,7 @@ reallabel='real'
 fakelabel='fake'
 modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
 
-plotting=[True, True, False, False, False, False]
+plotting=[False, False, True, False, True, True]
 
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
@@ -195,7 +195,7 @@ for n in range(6):
             dA0=dA[0]
             dR0=dR[0]
             for i in range(len(dE)):
-                u_input.append([0.,(dA[i]-dA0),(dR[i]-dR0)])
+                u_input.append([0.,(-dA[i]-dA0),(dR[i]-dR0)])
                 
             response, T, state = co.lsim(SS, T = time,U = u_input)
             
