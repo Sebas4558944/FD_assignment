@@ -35,7 +35,7 @@ def phugoid():
     #no change in pitch rate and no in angle of attack
     #neglect CZq and CX0
     A = 2*muc*(CZa*Cmq-2*muc*Cma)
-    B = 2*muc*(CXu*Cma-Cma*CXa)+Cmq*(CZa*CXa-CXu*CZa)
+    B = 2*muc*(CXu*Cma-Cmu*CXa)+Cmq*(CZu*CXa-CXu*CZa)
     C = CZ0*(Cmu*CZa-CZu*Cma)
     eig1 =(-B+np.sqrt(B-4*A*C+0j))/2/A
     eig2 = (-B-np.sqrt(B-4*A*C+0j))/2/A
