@@ -14,10 +14,10 @@ import scipy as sp
 #from eigenvalues to damping ratio and natural frequency
 def freq_damp_period(eigen):
     xi = np.real(eigen)
-    eta = np.imag(eigen)
+    eta = np.imag(eigen)    
     freq = np.sqrt(xi**2+eta**2)
     damp = -xi/freq
-    period = 2*np.pi/freq
+    period = 2*np.pi/np.abs(eta)
     return freq, damp, period
     
 #short period motion
