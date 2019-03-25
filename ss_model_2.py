@@ -102,11 +102,10 @@ def getStateSpace(alpha0,V0,th0,changed):
 label_font = 20
 title_font = 25
 reallabel='FlightData'
-fakelabel='Model Data with Original Paramters'
+fakelabel='Model Data with Original Parameters'
 fixedfakelabel='Model Data with Adapted Parameters'
 modes = ["Phugoid", "Short Period", "Dutch Roll","Dutch Roll Yd", "Aperiodic Roll", "Spiral" ]
 
-#Plots modes
 plotting=[True]*6
 
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
@@ -138,10 +137,12 @@ for n in range(6):
         dE=elevators[n]
         
         #set init values
+        hp0=h[0]
         V0=V[0]
         alpha0=A[0]
         th0=th[0]
-        hp0=h[0]
+        r0=roll[0]
+        y0=yaw[0]
         
         SS=getStateSpace(alpha0,V0,th0,0) #Default Values State Space
         SSF=getStateSpace(alpha0,V0,th0,1) #Fixed State Space 
@@ -245,10 +246,14 @@ for n in range(6):
                 speed_out[i] = speed_out[i]+V0
                 h_out[i] = h_out[i]+hp0
                 theta_out[i] = theta_out[i]+th0
+                psi_out[i] = psi_out[i]+r0
+                phi_out[i] = phi_out[i]+y0
                 
                 speed_outF[i] = speed_outF[i]+V0
                 h_outF[i] = h_outF[i]+hp0
                 theta_outF[i] = theta_outF[i]+th0
+                psi_outF[i] = psi_outF[i]+r0
+                phi_outF[i] = phi_outF[i]+y0
                 
             plt.figure()
             plt.subplot(231)
