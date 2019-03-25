@@ -143,8 +143,9 @@ for n in range(6):
             #u = [de,da,dr]
             #Rudders and ailerons set to zero since this shit is symmetrical
             u_input=[]
+            dE0=dE[0]
             for i in range(len(dE)):
-                u_input.append([-dE[i],0.,0.])
+                u_input.append([(dE[i]-dE0),0.,0.])
                 
             response, T, state = co.lsim(SS, T = time,U = u_input)
             
@@ -193,8 +194,10 @@ for n in range(6):
             #u = [de,da,dr]
             #Elevator set to zero since this shit is asymmetrical
             u_input=[]
+            dA0=dA[0]
+            dR0=dR[0]
             for i in range(len(dE)):
-                u_input.append([0.,-dA[i],-dR[i]])
+                u_input.append([0.,(dA[i]-dA0),(dR[i]-dR0)])
                 
             response, T, state = co.lsim(SS, T = time,U = u_input)
             
