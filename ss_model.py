@@ -275,7 +275,7 @@ title_font = 25
 
 #############step input from t=0 to t=tstep ###################
 steps = 1000
-tmax = 100. 
+tmax = 20. 
 tstep = 1.
 nstep = tstep/(tmax/float(steps))
 T = np.linspace(0,tmax,steps)
@@ -283,14 +283,14 @@ T = np.linspace(0,tmax,steps)
 #create impulse vector for t = 0 
 u_input = []
 #[de,da,dr]
-u_val = [0.01,0.0,0.0]
+u_val = [0.0,0.0,0.025]
 
 #move forcing to 0 for anything past the initial input
-for i in range(steps):
+for i in range(steps): 
     if i<=nstep:
         u_input.append(u_val)
     elif i>nstep:
-        u_input.append([0.,0.,0.])
+        u_input.append([0.,0.,0.0])
 u_input = np.array(u_input)
 
 #calculate response

@@ -17,11 +17,11 @@ def getStateSpace(alpha0,V0,th0,changed):
     if changed==1:
         from Cit_par import muc,c,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
         CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
-        CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr
+        CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
     else:
         from Cit_par_default import muc,c,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
         CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
-        CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr
+        CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
     C1S=np.matrix([[-2.*muc*c/(V0**2), 0., 0., 0., 0., 0. ,0., 0., 0., 0.],\
                    [0., (CZadot - 2. * muc) * c/V0, 0., 0. ,0., 0., 0., 0., 0., 0.],\
                    [0., 0., -c/V0, 0.,  0., 0. ,0., 0., 0., 0.],\
@@ -90,12 +90,14 @@ def getStateSpace(alpha0,V0,th0,changed):
                     [0,0,0,0,1,0,0,0,0,0],\
                     [0,0,1,0,0,0,0,0,0,0],\
                     [0,0,0,0,0,0,1,0,0,0],\
-                    [0,0,0,0,0,0,0,0,0,1]])
+                    [0,0,0,0,0,0,0,0,1,0]])
     DS = np.zeros((5,3))
     #
     ##init ss
     SS=co.ss(A,B,CS,DS)
-    
+    #print eigenvalues A matrix
+    eigenvals, eigenvectors = np.linalg.eig(A)
+    print eigenvals, changed
     return SS
 
 #######plotting vars
@@ -106,7 +108,7 @@ fakelabel='Model Data with Original Parameters'
 fixedfakelabel='Model Data with Adapted Parameters'
 modes = ["Phugoid", "Short Period", "Dutch Roll","Dutch Roll Yd", "Aperiodic Roll", "Spiral" ]
 
-plotting=[True]*6
+plotting=[0,0,1,0,1,1]
 
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
@@ -224,7 +226,7 @@ for n in range(6):
             dA0=dA[0]
             dR0=dR[0]
             for i in range(len(dE)):
-                u_input.append([0.,(-dA[i]-dA0),(dR[i]-dR0)])
+                u_input.append([0.,(dA[i]-dA0),(dR[i]-dR0)])
                 
             response, T, state = co.lsim(SS, T = time,U = u_input)
             responseF, TF, stateF = co.lsim(SSF, T = time,U = u_input)
@@ -233,14 +235,14 @@ for n in range(6):
             speed_out = response[:,0]
             h_out = response[:,1]
             theta_out = response[:,2]
-            psi_out = response[:,3]
-            phi_out = response[:,4]
+            psi_out = response[:,3]*-1.
+            phi_out = response[:,4]*-1.
             
             speed_outF = responseF[:,0]
             h_outF = responseF[:,1]
             theta_outF = responseF[:,2]
-            psi_outF = responseF[:,3]
-            phi_outF = responseF[:,4]
+            psi_outF = responseF[:,3]*-1.
+            phi_outF = responseF[:,4]*-1.
             
             for i in range(len(speed_out)):
                 speed_out[i] = speed_out[i]+V0
@@ -276,7 +278,7 @@ for n in range(6):
             plt.subplot(233)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
-            plt.ylabel("Yaw angle [rad]", fontsize = label_font)
+            plt.ylabel("Yaw rate [rad/s]", fontsize = label_font)
             plt.plot(T,phi_out, label=fakelabel)
             plt.plot(TF,phi_outF, label=fixedfakelabel)
             plt.plot(time, yaw, label=reallabel)
