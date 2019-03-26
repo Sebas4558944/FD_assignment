@@ -92,22 +92,22 @@ Cmu = +0.06990*0.7
 Cmadot = +0.17800
 Cmq = -8.79415*1.3
 
-CYb = -0.7500*0.7
+CYb = -0.7500*0.55
 CYbdot = 0
-CYp = -0.0304*1.3
-CYr = +0.8495*1.3
+CYp = -0.0304*1.5
+CYr = +0.8495*1.5
 CYda = -0.0400
 CYdr = +0.2300*0.7
 
-Clb = -0.10260*1.3
-Clp = -0.71085*1.3        #mostly affects aperiodic roll angle and slope in dutch roll
-Clr = +0.23760*0.7
-Clda = -0.23088*0.75
-Cldr = +0.03440*1.
+Clb = -0.10260*1.1
+Clp = -0.71085*1.575     #mostly affects aperiodic roll angle and slope in dutch roll
+Clr = +0.23760*0.85
+Clda = -0.23088*0.775
+Cldr = +0.03440*1.4
 
-Cnb = +0.1348*0.5
-Cnbdot = -0.05
-Cnp = -0.0602*0.7
-Cnr = -0.2061*0.7
-Cnda = -0.0120*1.
-Cndr = -0.0939*0.7
+Cnb = +0.1348*0.31          #period of dutch roll 
+Cnbdot = -0.035
+Cnp = -0.0602*0.45
+Cnr = -0.2061*0.575
+Cnda = -0.0120*1.2
+Cndr = -0.0939*0.375
