@@ -6,7 +6,7 @@ Created on Tue Mar 19 15:46:19 2019
 """
 
 import numpy as np
-from Cit_par_default import muc,c,V0,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
+from Cit_par_default import muc, V0, c,Cmadot,KY2,CXu,CXa,CZa,CX0,CZq,Cmu,Cma,KX2,Cmq,mub,\
 CYr,KXZ,b,Clr,Cnr,Clp,Cnp,CZadot,CZ0,CXq,CZu,CXde,CZde,Cmde,CYbdot,Cnbdot,KZ2,\
 CYb,CL,CYp,Clb,Cnb,CYda,CYdr,Clda,Cldr,Cnda,Cndr, alpha0, th0
 import scipy as sp
@@ -17,11 +17,15 @@ def freq_damp_period(eigen):
     eta = np.imag(eigen)    
     freq = np.sqrt(xi**2+eta**2)
     damp = -xi/freq
+    freq_damp = freq*np.sqrt(1-damp**2)
     period = 2*np.pi/np.abs(eta)
-    T_half_sym = -(np.log(0.5)) / np.abs(xi)
+    T_half_sym = (np.log(0.5)) / xi
     print "Period is: ", period
     print "Half time is: ", T_half_sym
-    return freq, damp, period, T_half_sym
+    print "Damping is:", damp
+    
+    
+    return freq, damp, period, T_half_sym, freq_damp
     
 #short period motion
 def short_period():
