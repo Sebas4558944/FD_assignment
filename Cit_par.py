@@ -19,8 +19,8 @@ CD0 = 0.025615927843555666  # Zero lift drag coefficient [ ]
 CLa = 5.084  # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma = -0.2525*1.25 # longitudinal stabilty [ ]
-Cmde = -0.718*0.8 # elevator effectiveness [ ]
+Cma = -0.2525*0.8 # longitudinal stabilty [ ]
+Cmde = -0.718*0.9 # elevator effectiveness [ ]
 
 # Aircraft geometry
 
@@ -75,21 +75,21 @@ CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e)  # Drag coefficient [ ]
 # Stabiblity derivatives
 
 CX0 = W * sin(th0) / (0.5 * rho * V0 ** 2 * S)
-CXu = -0.02792*0.8
+CXu = -0.02792*0.825
 CXa = -0.479668*1.4
 CXadot = +0.08330
 CXq = -0.28170*1.4
 CXde = -0.03728*1.3
 
 CZ0 = -W * cos(th0) / (0.5 * rho * V0 ** 2 * S)
-CZu = -0.37616*1.4
+CZu = -0.37616*1.35
 CZa = -5.74340*1.4
 CZadot = -0.00350
 CZq = -5.66290*1.4
 CZde = -0.69612*1.3
 
-Cmu = +0.06990*0.59
-Cmadot = +0.17800*0.6
+Cmu = +0.06990*0.605
+Cmadot = +0.17800*1.4
 Cmq = -8.79415*1.5
 
 CYb = -0.7500*0.55

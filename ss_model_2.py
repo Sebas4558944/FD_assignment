@@ -110,7 +110,7 @@ fakelabel='Model Data with Original Parameters'
 fixedfakelabel='Model Data with Adapted Parameters'
 modes = ["Phugoid", "Short Period", "Dutch Roll","Dutch Roll Yd", "Aperiodic Roll", "Spiral" ]
 
-plotting=[1,1,1,1,1,1]
+plotting=[1,1,0,0,0,0]
 printRMS=1
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators, rollrates = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
