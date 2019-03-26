@@ -91,8 +91,9 @@ def getStateSpace(alpha0,V0,th0,changed):
                     [0,0,1,0,0,0,0,0,0,0],\
                     [0,0,0,0,0,0,1,0,0,0],\
                     [0,0,0,0,0,0,0,0,1,0],\
-                    [0,0,0,0,0,0,0,1,0,0]])
-    DS = np.zeros((6,3))
+                    [0,0,0,0,0,0,0,1,0,0],\
+                    [0,1,0,0,0,0,0,0,0,0]])
+    DS = np.zeros((7,3))
     #
     ##init ss
     SS=co.ss(A,B,CS,DS)
@@ -171,6 +172,7 @@ for n in range(6):
             psi_out = response[:,3]
             phi_out = response[:,4]
             rollr_out = response[:,5]
+            AoA_out = response[:,6]
             
             speed_outF = responseF[:,0]
             h_outF = responseF[:,1]
@@ -178,6 +180,7 @@ for n in range(6):
             psi_outF = responseF[:,3]
             phi_outF = responseF[:,4]
             rollr_outF = responseF[:,5]
+            AoA_outF = responseF[:,6]
             
             speed_delta=0
             theta_delta=0
@@ -189,10 +192,12 @@ for n in range(6):
                 speed_out[i] = speed_out[i]+V0
                 h_out[i] = h_out[i]+hp0
                 theta_out[i] = theta_out[i]+th0
+                AoA_out[i] = AoA_out[i]+alpha0
                 
                 speed_outF[i] = speed_outF[i]+V0
                 h_outF[i] = h_outF[i]+hp0
                 theta_outF[i] = theta_outF[i]+th0
+                AoA_outF[i] = AoA_outF[i]+alpha0
                 
                 speed_delta+=(V[i]-speed_outF[i])**2              
                 theta_delta+=(th[i]-theta_outF[i])**2
@@ -210,7 +215,7 @@ for n in range(6):
                 print "h rms=",h_delta
             
             plt.figure()
-            plt.subplot(221)
+            plt.subplot(231)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Velocity [m/s]", fontsize = label_font)
@@ -219,7 +224,7 @@ for n in range(6):
             plt.plot(time, V, label=reallabel)
             plt.legend()
             
-            plt.subplot(222)
+            plt.subplot(232)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Altitude [m]", fontsize = label_font)
@@ -227,7 +232,7 @@ for n in range(6):
             plt.plot(TF,h_outF, label=fixedfakelabel)
             plt.plot(time, h, label=reallabel)
             
-            plt.subplot(223)
+            plt.subplot(233)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Pitch angle [rad]", fontsize = label_font)
@@ -235,7 +240,17 @@ for n in range(6):
             plt.plot(TF,theta_outF, label=fixedfakelabel)
             plt.plot(time, th, label=reallabel)
             
-            plt.subplot(224)
+            plt.subplot(234)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("AoA [rad]", fontsize = label_font)
+            plt.plot(T,AoA_out, label=fakelabel)
+            plt.plot(TF,AoA_outF, label=fixedfakelabel)
+            plt.plot(time, A, label=reallabel)
+            plt.suptitle(modes[n], fontsize = title_font)  
+            plt.show()
+            
+            plt.subplot(235)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Elevator [rad]", fontsize = label_font)
