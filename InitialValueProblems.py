@@ -118,9 +118,9 @@ fixedfakelabel='Model Data with Adapted Parameters'
 #Get Flight Data        
 #set init values
 alpha0=0.
-V0=180.
+V0=1.
 th0=0.
-hp0=5000.
+hp0=0.
 
 SS=getStateSpace(alpha0,V0,th0,0) #Default Values State Space
 SSF=getStateSpace(alpha0,V0,th0,1) #Fixed State Space 
@@ -128,14 +128,15 @@ SSF=getStateSpace(alpha0,V0,th0,1) #Fixed State Space
 steps = 1000*4+1
 tmax = 100.*4 
 T = np.linspace(0,tmax,steps)
-
-plotting=[1,1,1,1,1,1,1,1,1,1]
+sym=[1,1,1,1,1,0,0,0,0,0]
+asym=[0,0,0,0,0,1,1,1,1,1]
+plotting=[1,    1,          1,      1,              0,      1,      1,    1,  1,  0]
 modes=['Velocity','alpha','theta','pitch rate','height','Sideslip','psi','p','r','phi' ]
-DX0 = np.matrix([[1],\
+DX0 = np.matrix([[1.],\
                 [0.05],\
                 [0.05],\
                 [0.05],\
-                [1],\
+                [1.],\
                 [0.05],\
                 [0.05],\
                 [0.05],\
@@ -148,16 +149,16 @@ for n in range(10): #Sym
         #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
         #u = [de,da,dr]
         #Rudders and ailerons set to zero since this shit is symmetrical
-        X0 = np.matrix([[0],\
-                        [0],\
-                        [0],\
-                        [0],\
-                        [0],\
-                        [0],\
-                        [0],\
-                        [0],\
-                        [0],\
-                        [0]])
+        X0 = np.matrix([[0.],\
+                        [0.],\
+                        [0.],\
+                        [0.],\
+                        [0.],\
+                        [0.],\
+                        [0.],\
+                        [0.],\
+                        [0.],\
+                        [0.]])
         X0[n]=DX0[n]
         
         response, T = co.initial(SS, T = T,X0 = X0)
@@ -190,71 +191,69 @@ for n in range(10): #Sym
             h_outF[i] = h_outF[i]+hp0
             theta_outF[i] = theta_outF[i]+th0
             AoA_outF[i] = AoA_outF[i]+alpha0
-        
-        plt.figure()
-        plt.subplot(221)
-        plt.grid()
-        plt.xlabel("Time [sec]", fontsize = label_font)
-        plt.ylabel("Velocity [m/s]", fontsize = label_font)
-        plt.plot(T,speed_out, label=fakelabel)
-        plt.plot(TF,speed_outF, label=fixedfakelabel)
-        plt.legend()
-        
-        plt.subplot(222)
-        plt.grid()
-        plt.xlabel("Time [sec]", fontsize = label_font)
-        plt.ylabel("Altitude [m]", fontsize = label_font)
-        plt.plot(T,h_out, label=fakelabel)
-        plt.plot(TF,h_outF, label=fixedfakelabel)
-        
-        plt.subplot(223)
-        plt.grid()
-        plt.xlabel("Time [sec]", fontsize = label_font)
-        plt.ylabel("Pitch angle [rad]", fontsize = label_font)
-        plt.plot(T,theta_out, label=fakelabel)
-        plt.plot(TF,theta_outF, label=fixedfakelabel)
-        
-        plt.subplot(224)
-        plt.grid()
-        plt.xlabel("Time [sec]", fontsize = label_font)
-        plt.ylabel("AoA [rad]", fontsize = label_font)
-        plt.plot(T,AoA_out, label=fakelabel)
-        plt.plot(TF,AoA_outF, label=fixedfakelabel)
-        plt.suptitle(modes[n], fontsize = title_font)  
-        plt.show()
-    
-        plt.suptitle(modes[n], fontsize = title_font)  
-        plt.show()
-        
-        plt.figure()
-        plt.subplot(221)
-        plt.grid()
-        plt.xlabel("Time [sec]", fontsize = label_font)
-        plt.ylabel("Velocity [m/s]", fontsize = label_font)
-        plt.plot(T,speed_out, label=fakelabel)
-        plt.plot(TF,speed_outF, label=fixedfakelabel)
-        plt.legend()
-        
-        plt.subplot(222)
-        plt.grid()
-        plt.xlabel("Time [sec]", fontsize = label_font)
-        plt.ylabel("Roll rate [rad/s]", fontsize = label_font)
-        plt.plot(T,rollr_out, label=fakelabel)
-        plt.plot(TF,rollr_outF, label=fixedfakelabel)
-        
-        plt.subplot(223)
-        plt.grid()
-        plt.xlabel("Time [sec]", fontsize = label_font)
-        plt.ylabel("Yaw rate [rad/s]", fontsize = label_font)
-        plt.plot(T,phi_out, label=fakelabel)
-        plt.plot(TF,phi_outF, label=fixedfakelabel)
-        
-        plt.subplot(224)
-        plt.grid()
-        plt.xlabel("Time [sec]", fontsize = label_font)
-        plt.ylabel("Roll Angle [rad]", fontsize = label_font)
-        plt.plot(T,psi_out, label=fakelabel)
-        plt.plot(TF,psi_outF, label=fixedfakelabel)
-        
-        plt.suptitle(modes[n], fontsize = title_font)  
-        plt.show()
+        if sym[n]:
+            plt.figure()
+            plt.subplot(221)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("Velocity [m/s]", fontsize = label_font)
+            plt.plot(T,speed_out, label=fakelabel)
+    #        plt.plot(TF,speed_outF, label=fixedfakelabel)
+    #        plt.legend()
+            
+            plt.subplot(222)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("Altitude [m]", fontsize = label_font)
+            plt.plot(T,h_out, label=fakelabel)
+    #        plt.plot(TF,h_outF, label=fixedfakelabel)
+            
+            plt.subplot(223)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("Pitch angle [rad]", fontsize = label_font)
+            plt.plot(T,theta_out, label=fakelabel)
+    #        plt.plot(TF,theta_outF, label=fixedfakelabel)
+            
+            plt.subplot(224)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("AoA [rad]", fontsize = label_font)
+            plt.plot(T,AoA_out, label=fakelabel)
+    #        plt.plot(TF,AoA_outF, label=fixedfakelabel)
+            
+            plt.suptitle((modes[n]+' Symmetric'), fontsize = title_font)  
+            plt.show()
+        if asym[n]:
+            plt.figure()
+            plt.subplot(221)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("Velocity [m/s]", fontsize = label_font)
+            plt.plot(T,speed_out, label=fakelabel)
+    #        plt.plot(TF,speed_outF, label=fixedfakelabel)
+    #        plt.legend()
+            
+            plt.subplot(222)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("Roll rate [rad/s]", fontsize = label_font)
+            plt.plot(T,rollr_out, label=fakelabel)
+    #        plt.plot(TF,rollr_outF, label=fixedfakelabel)
+            
+            plt.subplot(223)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("Yaw rate [rad/s]", fontsize = label_font)
+            plt.plot(T,phi_out, label=fakelabel)
+    #        plt.plot(TF,phi_outF, label=fixedfakelabel)
+            
+            plt.subplot(224)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("Roll Angle [rad]", fontsize = label_font)
+            plt.plot(T,psi_out, label=fakelabel)
+    #        plt.plot(TF,psi_outF, label=fixedfakelabel)
+            
+            plt.suptitle((modes[n]+' Asymmetric'), fontsize = title_font)  
+            plt.show()
