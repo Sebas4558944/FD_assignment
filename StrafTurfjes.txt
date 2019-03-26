@@ -27,11 +27,11 @@ Rick - 8
 5 - voor fissa skippen (college/fissa)
 2 - quoted
 =====================================================================================================================================
-Daan - 6
+Daan - 7
 1 - MB'Vo
 1 - voor selfhype
 3 - voor kutopmerking
-1 - 'quoted'
+2 - 'quoted'
 =====================================================================================================================================
 Quotes:
 Ser : Holy Tering
@@ -40,4 +40,4 @@ Rick : Ooh jammer, dan kun je me niet als slaafje gebruiken
 Sebas : Als je hier het randje vol spuit kan je lekker spuiten
 Rick : Ser doe je mond is open
 Daan : We hebben alles wat beweegt gefuckt, maar ik heb geen herpes! (+-)
-
+Martijn:"Ik heb drie uur naar een scherm staat staren" - Daan: "En zo hoort het ook!"
