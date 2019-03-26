@@ -173,6 +173,9 @@ for n in range(10): #Sym
         rollr_out = response[:,5]
         AoA_out = response[:,6]
         
+        psi_out_real = response[:,7]
+        psi_out_realF = response[:,7]
+        
         speed_outF = responseF[:,0]
         h_outF = responseF[:,1]
         theta_outF = responseF[:,2]
@@ -191,6 +194,7 @@ for n in range(10): #Sym
             h_outF[i] = h_outF[i]+hp0
             theta_outF[i] = theta_outF[i]+th0
             AoA_outF[i] = AoA_outF[i]+alpha0
+            
         if sym[n]:
             plt.figure()
             plt.subplot(221)
@@ -229,8 +233,8 @@ for n in range(10): #Sym
             plt.subplot(221)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
-            plt.ylabel("Velocity [m/s]", fontsize = label_font)
-            plt.plot(T,speed_out, label=fakelabel)
+            plt.ylabel("Yaw [rad]", fontsize = label_font)
+            plt.plot(T,psi_out_real, label=fakelabel)
     #        plt.plot(TF,speed_outF, label=fixedfakelabel)
     #        plt.legend()
             
