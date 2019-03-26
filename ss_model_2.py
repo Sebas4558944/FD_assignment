@@ -97,7 +97,6 @@ def getStateSpace(alpha0,V0,th0,changed):
     SS=co.ss(A,B,CS,DS)
     #print eigenvalues A matrix
     eigenvals, eigenvectors = np.linalg.eig(A)
-    print eigenvals, changed
 
     return SS
 
@@ -109,8 +108,8 @@ fakelabel='Model Data with Original Parameters'
 fixedfakelabel='Model Data with Adapted Parameters'
 modes = ["Phugoid", "Short Period", "Dutch Roll","Dutch Roll Yd", "Aperiodic Roll", "Spiral" ]
 
-plotting=[0,0,1,0,1,1]
-
+plotting=[1,1,1,1,1,1]
+printRMS=1
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
 ######short period (n=1): plotting speed, altitude and angle of attack against time     =
@@ -175,7 +174,13 @@ for n in range(6):
             psi_outF = responseF[:,3]
             phi_outF = responseF[:,4]
             
+            speed_delta=0
+            theta_delta=0
+            h_delta=0
+            
+            q=0
             for i in range(len(speed_out)):
+                q+=1
                 speed_out[i] = speed_out[i]+V0
                 h_out[i] = h_out[i]+hp0
                 theta_out[i] = theta_out[i]+th0
@@ -184,6 +189,19 @@ for n in range(6):
                 h_outF[i] = h_outF[i]+hp0
                 theta_outF[i] = theta_outF[i]+th0
                 
+                speed_delta+=(V[i]-speed_outF[i])**2              
+                theta_delta+=(th[i]-theta_outF[i])**2
+                h_delta+=(h[i]-h_outF[i])**2
+            
+            speed_delta=speed_delta/(q-1)
+            theta_delta=theta_delta/(q-1)
+            h_delta=h_delta/(q-1)
+            
+            if printRMS:
+                print speed_delta
+                print theta_delta
+                print h_delta
+            
             plt.figure()
             plt.subplot(221)
             plt.grid()
@@ -245,6 +263,11 @@ for n in range(6):
             psi_outF = responseF[:,3]*-1.
             phi_outF = responseF[:,4]*-1.
             
+            psi_delta=0
+            phi_delta=0
+            
+            q=0
+            
             for i in range(len(speed_out)):
                 speed_out[i] = speed_out[i]+V0
                 h_out[i] = h_out[i]+hp0
@@ -258,6 +281,19 @@ for n in range(6):
                 psi_outF[i] = psi_outF[i]+r0
                 phi_outF[i] = phi_outF[i]+y0
                 
+                speed_delta+=(V[i]-speed_outF[i])**2              
+                psi_delta+=(th[i]-theta_outF[i])**2
+                phi_delta+=(h[i]-h_outF[i])**2
+                
+            speed_delta=speed_delta/(q-1)
+            theta_delta=theta_delta/(q-1)
+            h_delta=h_delta/(q-1)
+            
+            if printRMS:
+                print speed_delta
+                print theta_delta
+                print h_delta
+            
             plt.figure()
             plt.subplot(231)
             plt.grid()
