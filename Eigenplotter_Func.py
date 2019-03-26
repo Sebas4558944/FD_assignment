@@ -59,13 +59,14 @@ def GetLists():
     aileron_list = np.radians(fixList(newDict.get("delta_a")))
     rudder_list = np.radians(fixList(newDict.get("delta_r")))
     pitch_list = np.radians(fixList(newDict.get("Ahrs1_Pitch")))
-    return time_list,velocity_list,altitude_list,alpha_list, pitch_list,roll_list,yaw_list,aileron_list,rudder_list, elevator_list, eigenmotions
+    rollrate_list = np.radians(fixList(newDict.get("Ahrs1_bRollRate")))
+    return time_list,velocity_list,altitude_list,alpha_list, pitch_list,roll_list,yaw_list,aileron_list,rudder_list, elevator_list,rollrate_list, eigenmotions
 
 
 def getEigenmotions():
     lengths = [150.,30.,30.,30.,20.,160.]
     modes = ["phugoid", "short period", "dutch roll","dutch roll yd", "aperiodic roll", "spiral" ]
-    time_list,velocity_list,altitude_list,alpha_list, pitch_list,roll_list,yaw_list,aileron_list,rudder_list, elevator_list, eigenmotions=GetLists()
+    time_list,velocity_list,altitude_list,alpha_list, pitch_list,roll_list,yaw_list,aileron_list,rudder_list, elevator_list,rollrate_list, eigenmotions=GetLists()
     times=[]
     velocities=[]
     altitudes=[]
@@ -76,6 +77,7 @@ def getEigenmotions():
     elevators=[]
     ailerons=[]
     rudders=[]
+    rollrates = []
     for n in range(len(modes)):
         indices=time_stamps(n, eigenmotions, lengths, time_list)
         times.append(time_list[indices[0]:indices[-1]])
@@ -88,7 +90,8 @@ def getEigenmotions():
         ailerons.append(aileron_list[indices[0]:indices[-1]])
         rudders.append(rudder_list[indices[0]:indices[-1]])
         pitches.append(pitch_list[indices[0]:indices[-1]])
-    return indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators
+        rollrates.append(rollrate_list[indices[0]:indices[-1]])
+    return indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators, rollrates
 
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time
 ######short period (n=1): plotting speed, altitude and angle of attack against time 

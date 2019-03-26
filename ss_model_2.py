@@ -90,8 +90,9 @@ def getStateSpace(alpha0,V0,th0,changed):
                     [0,0,0,0,1,0,0,0,0,0],\
                     [0,0,1,0,0,0,0,0,0,0],\
                     [0,0,0,0,0,0,1,0,0,0],\
-                    [0,0,0,0,0,0,0,0,1,0]])
-    DS = np.zeros((5,3))
+                    [0,0,0,0,0,0,0,0,1,0],\
+                    [0,0,0,0,0,0,0,1,0,0]])
+    DS = np.zeros((6,3))
     #
     ##init ss
     SS=co.ss(A,B,CS,DS)
@@ -111,7 +112,7 @@ modes = ["Phugoid", "Short Period", "Dutch Roll","Dutch Roll Yd", "Aperiodic Rol
 
 plotting=[0,0,1,0,1,1]
 
-indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators = getEigenmotions()
+indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators, rollrates = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
 ######short period (n=1): plotting speed, altitude and angle of attack against time     =
 #####dutch roll (n=2): plot yaw angle, roll angle, altitude and true airspeed           =
@@ -138,6 +139,7 @@ for n in range(6):
         dA=ailerons[n]
         dR=rudders[n]
         dE=elevators[n]
+        rollr = rollrates[n]
         
         #set init values
         hp0=h[0]
@@ -146,6 +148,7 @@ for n in range(6):
         th0=th[0]
         r0=roll[0]
         y0=yaw[0]
+        rr0 = rollr[0]        
         
         SS=getStateSpace(alpha0,V0,th0,0) #Default Values State Space
         SSF=getStateSpace(alpha0,V0,th0,1) #Fixed State Space 
@@ -168,12 +171,14 @@ for n in range(6):
             theta_out = response[:,2]
             psi_out = response[:,3]
             phi_out = response[:,4]
+            rollr_out = response[:,5]
             
             speed_outF = responseF[:,0]
             h_outF = responseF[:,1]
             theta_outF = responseF[:,2]
             psi_outF = responseF[:,3]
             phi_outF = responseF[:,4]
+            rollr_outF = responseF[:,5]
             
             for i in range(len(speed_out)):
                 speed_out[i] = speed_out[i]+V0
@@ -238,12 +243,14 @@ for n in range(6):
             theta_out = response[:,2]
             psi_out = response[:,3]*-1.
             phi_out = response[:,4]*-1.
+            rollr_out = response[:,5]*-1            
             
             speed_outF = responseF[:,0]
             h_outF = responseF[:,1]
             theta_outF = responseF[:,2]
             psi_outF = responseF[:,3]*-1.
             phi_outF = responseF[:,4]*-1.
+            rollr_outF = responseF[:,5]*-1.
             
             for i in range(len(speed_out)):
                 speed_out[i] = speed_out[i]+V0
@@ -251,12 +258,14 @@ for n in range(6):
                 theta_out[i] = theta_out[i]+th0
                 psi_out[i] = psi_out[i]+r0
                 phi_out[i] = phi_out[i]+y0
+                rollr_out[i] = rollr_out[i]+rr0
                 
                 speed_outF[i] = speed_outF[i]+V0
                 h_outF[i] = h_outF[i]+hp0
                 theta_outF[i] = theta_outF[i]+th0
                 psi_outF[i] = psi_outF[i]+r0
                 phi_outF[i] = phi_outF[i]+y0
+                rollr_outF[i] = rollr_outF[i]+rr0
                 
             plt.figure()
             plt.subplot(231)
@@ -271,10 +280,10 @@ for n in range(6):
             plt.subplot(232)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
-            plt.ylabel("Altitude [m]", fontsize = label_font)
-            plt.plot(T,h_out, label=fakelabel)
-            plt.plot(TF,h_outF, label=fixedfakelabel)
-            plt.plot(time, h, label=reallabel)
+            plt.ylabel("Roll rate [rad/s]", fontsize = label_font)
+            plt.plot(T,rollr_out, label=fakelabel)
+            plt.plot(TF,rollr_outF, label=fixedfakelabel)
+            plt.plot(time, rollr, label=reallabel)
             
             plt.subplot(233)
             plt.grid()
