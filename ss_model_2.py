@@ -198,14 +198,16 @@ for n in range(6):
                 theta_delta+=(th[i]-theta_outF[i])**2
                 h_delta+=(h[i]-h_outF[i])**2
             
-            speed_delta=speed_delta/(q-1)
-            theta_delta=theta_delta/(q-1)
-            h_delta=h_delta/(q-1)
+            speed_delta=np.sqrt(speed_delta/(q-1))
+            theta_delta=np.sqrt(theta_delta/(q-1))
+            h_delta=np.sqrt(h_delta/(q-1))
             
             if printRMS:
-                print speed_delta
-                print theta_delta
-                print h_delta
+                print ''
+                print modes[n]
+                print "V rms=",speed_delta
+                print "theta rms=",theta_delta
+                print "h rms=",h_delta
             
             plt.figure()
             plt.subplot(221)
@@ -272,10 +274,13 @@ for n in range(6):
             
             psi_delta=0
             phi_delta=0
+            rollr_delta=0
             
             q=0
             
             for i in range(len(speed_out)):
+                q+=1
+                
                 speed_out[i] = speed_out[i]+V0
                 h_out[i] = h_out[i]+hp0
                 theta_out[i] = theta_out[i]+th0
@@ -289,19 +294,21 @@ for n in range(6):
                 psi_outF[i] = psi_outF[i]+r0
                 phi_outF[i] = phi_outF[i]+y0
                 rollr_outF[i] = rollr_outF[i]+rr0
+                           
+                psi_delta+=(roll[i]-psi_outF[i])**2
+                phi_delta+=(yaw[i]-phi_outF[i])**2
+                rollr_delta+=(rollr[i]-rollr_outF[i])**2
                 
-                speed_delta+=(V[i]-speed_outF[i])**2              
-                psi_delta+=(th[i]-theta_outF[i])**2
-                phi_delta+=(h[i]-h_outF[i])**2
-                
-            speed_delta=speed_delta/(q-1)
-            theta_delta=theta_delta/(q-1)
-            h_delta=h_delta/(q-1)
+            psi_delta=np.sqrt(psi_delta/(q-1))
+            phi_delta=np.sqrt(phi_delta/(q-1))
+            rollr_delta=np.sqrt(rollr_delta/(q-1))
             
             if printRMS:
-                print speed_delta
-                print theta_delta
-                print h_delta
+                print ''
+                print modes[n]
+                print 'Psi/roll rms=', psi_delta
+                print 'Phi/yaw rms=', phi_delta
+                print 'psidot/rollrate rms=', rollr_delta
             
             plt.figure()
             plt.subplot(231)
