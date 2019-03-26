@@ -97,7 +97,7 @@ def getStateSpace(alpha0,V0,th0,changed):
     #
     ##init ss
     SS=co.ss(A,B,CS,DS)
-    #print eigenvalues A matrix
+    #print eigenvalues A matrix dimonsionalized
     eigenvals, eigenvectors = np.linalg.eig(A)
 
     return SS

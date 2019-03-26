@@ -98,7 +98,9 @@ def Plots(Cl, Cd, alpha):
     plt.xlabel(r'$ \alpha $ [degrees]')
     plt.ylabel(r'$C_L$ [-]')
     plt.show()
-
+    Cla = (Cl[-1]-Cl[0]) / (alpha[-1]-alpha[0])
+    print "Cla is: ", Cla
+    
     # Plot CD against angle of attack
     plt.figure()
     plt.plot(alpha, Cd)
