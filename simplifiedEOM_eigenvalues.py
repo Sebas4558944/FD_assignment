@@ -18,7 +18,10 @@ def freq_damp_period(eigen):
     freq = np.sqrt(xi**2+eta**2)
     damp = -xi/freq
     period = 2*np.pi/np.abs(eta)
-    return freq, damp, period
+    T_half_sym = -(np.log(0.5)) / np.abs(xi)
+    print "Period is: ", period
+    print "Half time is: ", T_half_sym
+    return freq, damp, period, T_half_sym
     
 #short period motion
 def short_period():
