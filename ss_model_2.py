@@ -91,14 +91,14 @@ def getStateSpace(alpha0,V0,th0,changed):
                     [0,0,1,0,0,0,0,0,0,0],\
                     [0,0,0,0,0,0,1,0,0,0],\
                     [0,0,0,0,0,0,0,0,1,0],\
-                    [0,0,0,0,0,0,0,1,0,0]])
-    DS = np.zeros((6,3))
+                    [0,0,0,0,0,0,0,1,0,0],\
+                    [0,1,0,0,0,0,0,0,0,0]])
+    DS = np.zeros((7,3))
     #
     ##init ss
     SS=co.ss(A,B,CS,DS)
-    #print eigenvalues A matrix
+    #print eigenvalues A matrix dimonsionalized
     eigenvals, eigenvectors = np.linalg.eig(A)
-    print eigenvals, changed
 
     return SS
 
@@ -110,8 +110,8 @@ fakelabel='Model Data with Original Parameters'
 fixedfakelabel='Model Data with Adapted Parameters'
 modes = ["Phugoid", "Short Period", "Dutch Roll","Dutch Roll Yd", "Aperiodic Roll", "Spiral" ]
 
-plotting=[1,1,0,0,0,0]
-
+plotting=[1,1,1,1,1,1]
+printRMS=1
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators, rollrates = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
 ######short period (n=1): plotting speed, altitude and angle of attack against time     =
@@ -172,6 +172,7 @@ for n in range(6):
             psi_out = response[:,3]
             phi_out = response[:,4]
             rollr_out = response[:,5]
+            AoA_out = response[:,6]
             
             speed_outF = responseF[:,0]
             h_outF = responseF[:,1]
@@ -179,18 +180,42 @@ for n in range(6):
             psi_outF = responseF[:,3]
             phi_outF = responseF[:,4]
             rollr_outF = responseF[:,5]
+            AoA_outF = responseF[:,6]
             
+            speed_delta=0
+            theta_delta=0
+            h_delta=0
+            
+            q=0
             for i in range(len(speed_out)):
+                q+=1
                 speed_out[i] = speed_out[i]+V0
                 h_out[i] = h_out[i]+hp0
                 theta_out[i] = theta_out[i]+th0
+                AoA_out[i] = AoA_out[i]+alpha0
                 
                 speed_outF[i] = speed_outF[i]+V0
                 h_outF[i] = h_outF[i]+hp0
                 theta_outF[i] = theta_outF[i]+th0
+                AoA_outF[i] = AoA_outF[i]+alpha0
                 
+                speed_delta+=(V[i]-speed_outF[i])**2              
+                theta_delta+=(th[i]-theta_outF[i])**2
+                h_delta+=(h[i]-h_outF[i])**2
+            
+            speed_delta=np.sqrt(speed_delta/(q-1))
+            theta_delta=np.sqrt(theta_delta/(q-1))
+            h_delta=np.sqrt(h_delta/(q-1))
+            
+            if printRMS:
+                print ''
+                print modes[n]
+                print "V rms=",speed_delta
+                print "theta rms=",theta_delta
+                print "h rms=",h_delta
+            
             plt.figure()
-            plt.subplot(221)
+            plt.subplot(231)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Velocity [m/s]", fontsize = label_font)
@@ -199,7 +224,7 @@ for n in range(6):
             plt.plot(time, V, label=reallabel)
             plt.legend()
             
-            plt.subplot(222)
+            plt.subplot(232)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Altitude [m]", fontsize = label_font)
@@ -207,7 +232,7 @@ for n in range(6):
             plt.plot(TF,h_outF, label=fixedfakelabel)
             plt.plot(time, h, label=reallabel)
             
-            plt.subplot(223)
+            plt.subplot(233)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Pitch angle [rad]", fontsize = label_font)
@@ -215,7 +240,17 @@ for n in range(6):
             plt.plot(TF,theta_outF, label=fixedfakelabel)
             plt.plot(time, th, label=reallabel)
             
-            plt.subplot(224)
+            plt.subplot(234)
+            plt.grid()
+            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.ylabel("AoA [rad]", fontsize = label_font)
+            plt.plot(T,AoA_out, label=fakelabel)
+            plt.plot(TF,AoA_outF, label=fixedfakelabel)
+            plt.plot(time, A, label=reallabel)
+            plt.suptitle(modes[n], fontsize = title_font)  
+            plt.show()
+            
+            plt.subplot(235)
             plt.grid()
             plt.xlabel("Time [sec]", fontsize = label_font)
             plt.ylabel("Elevator [rad]", fontsize = label_font)
@@ -252,7 +287,15 @@ for n in range(6):
             phi_outF = responseF[:,4]*-1.
             rollr_outF = responseF[:,5]*-1.
             
+            psi_delta=0
+            phi_delta=0
+            rollr_delta=0
+            
+            q=0
+            
             for i in range(len(speed_out)):
+                q+=1
+                
                 speed_out[i] = speed_out[i]+V0
                 h_out[i] = h_out[i]+hp0
                 theta_out[i] = theta_out[i]+th0
@@ -266,7 +309,22 @@ for n in range(6):
                 psi_outF[i] = psi_outF[i]+r0
                 phi_outF[i] = phi_outF[i]+y0
                 rollr_outF[i] = rollr_outF[i]+rr0
+                           
+                psi_delta+=(roll[i]-psi_outF[i])**2
+                phi_delta+=(yaw[i]-phi_outF[i])**2
+                rollr_delta+=(rollr[i]-rollr_outF[i])**2
                 
+            psi_delta=np.sqrt(psi_delta/(q-1))
+            phi_delta=np.sqrt(phi_delta/(q-1))
+            rollr_delta=np.sqrt(rollr_delta/(q-1))
+            
+            if printRMS:
+                print ''
+                print modes[n]
+                print 'Psi/roll rms=', psi_delta
+                print 'Phi/yaw rms=', phi_delta
+                print 'psidot/rollrate rms=', rollr_delta
+            
             plt.figure()
             plt.subplot(231)
             plt.grid()
