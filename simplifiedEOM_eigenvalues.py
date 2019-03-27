@@ -26,7 +26,7 @@ def freq_damp_period(eigen):
     
     
     return freq, damp, period, T_half_sym, freq_damp
-    
+
 #short period motion
 def short_period():
     #V = constant and gamma = 0 which removes theta equation

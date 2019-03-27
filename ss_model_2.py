@@ -101,7 +101,7 @@ def getStateSpace(alpha0,V0,th0,changed):
     SS=co.ss(A,B,CS,DS)
     #print eigenvalues A matrix dimonsionalized
     eigenvals, eigenvectors = np.linalg.eig(A)
-
+    print eigenvals, changed
     return SS
 
 #######plotting vars
@@ -112,7 +112,7 @@ fakelabel='Model Data with Original Parameters'
 fixedfakelabel='Model Data with Adapted Parameters'
 modes = ["Phugoid", "Short Period", "Dutch Roll","Dutch Roll Yd", "Aperiodic Roll", "Spiral" ]
 
-plotting=[1,1,1,0,1,1]
+plotting=[0,0,1,0,0,0]
 printRMS=1
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators, rollrates,pitchrates = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
@@ -261,7 +261,7 @@ for n in range(6):
             plt.subplot(235)
             plt.grid()
             plt.xlabel("t [sec]", fontsize = label_font)
-            plt.ylabel(r"$\delta_r$ [rad]", fontsize = label_font)
+            plt.ylabel(r"$\delta_e$ [rad]", fontsize = label_font)
             plt.plot(time, dE, label=reallabel)
 
 #            plt.subplot(236)
