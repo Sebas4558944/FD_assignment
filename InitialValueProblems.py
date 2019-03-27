@@ -88,6 +88,7 @@ def getStateSpace(alpha0,V0,th0,changed):
     #desired outputs:
     #y = [u,h,theta,psi,phi]  (all of which are states)
     #
+    #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
     CS = np.matrix([[1,0,0,0,0,0,0,0,0,0],\
                     [0,0,0,0,1,0,0,0,0,0],\
                     [0,0,1,0,0,0,0,0,0,0],\
@@ -164,25 +165,28 @@ for n in range(10): #Sym
         response, T = co.initial(SS, T = T,X0 = X0)
         responseF, TF = co.initial(SSF, T = T,X0 = X0)
     
+        #x = [u,alhpa,theta,q,h,beta,psi,p,r,phi]
+    
         #plotting u,h,theta,psi(roll),phi(yaw)
         speed_out = response[:,0]
         h_out = response[:,1]
         theta_out = response[:,2]
         psi_out = response[:,3]
-        phi_out = response[:,4]
+        yaw_rate_out = response[:,4]
         rollr_out = response[:,5]
         AoA_out = response[:,6]
-        
-        psi_out_real = response[:,7]
-        psi_out_realF = response[:,7]
+        phi_out = response[:,7]
+
         
         speed_outF = responseF[:,0]
         h_outF = responseF[:,1]
         theta_outF = responseF[:,2]
         psi_outF = responseF[:,3]
-        phi_outF = responseF[:,4]
+        yaw_rate_outF = responseF[:,4]
         rollr_outF = responseF[:,5]
         AoA_outF = responseF[:,6]
+        phi_outF = response[:,7]
+
         
         for i in range(len(speed_out)):
             speed_out[i] = speed_out[i]+V0
@@ -199,30 +203,30 @@ for n in range(10): #Sym
             plt.figure()
             plt.subplot(221)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
-            plt.ylabel("Velocity [m/s]", fontsize = label_font)
+            plt.xlabel("t [sec]", fontsize = label_font)
+            plt.ylabel("V [m/s]", fontsize = label_font)
             plt.plot(T,speed_out, label=fakelabel)
     #        plt.plot(TF,speed_outF, label=fixedfakelabel)
     #        plt.legend()
             
             plt.subplot(222)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
-            plt.ylabel("Altitude [m]", fontsize = label_font)
+            plt.xlabel("t [sec]", fontsize = label_font)
+            plt.ylabel("h [m]", fontsize = label_font)
             plt.plot(T,h_out, label=fakelabel)
     #        plt.plot(TF,h_outF, label=fixedfakelabel)
             
             plt.subplot(223)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
-            plt.ylabel("Pitch angle [rad]", fontsize = label_font)
+            plt.xlabel("t [sec]", fontsize = label_font)
+            plt.ylabel(r"$\theta$ [rad]", fontsize = label_font)
             plt.plot(T,theta_out, label=fakelabel)
     #        plt.plot(TF,theta_outF, label=fixedfakelabel)
             
             plt.subplot(224)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
-            plt.ylabel("AoA [rad]", fontsize = label_font)
+            plt.xlabel("t [sec]", fontsize = label_font)
+            plt.ylabel(r"$\alpha$ [rad]", fontsize = label_font)
             plt.plot(T,AoA_out, label=fakelabel)
     #        plt.plot(TF,AoA_outF, label=fixedfakelabel)
             
@@ -232,32 +236,31 @@ for n in range(10): #Sym
             plt.figure()
             plt.subplot(221)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
-            plt.ylabel("Yaw [rad]", fontsize = label_font)
-            plt.plot(T,psi_out_real, label=fakelabel)
+            plt.xlabel("t [sec]", fontsize = label_font)
+            plt.ylabel(r"$\psi$ [rad]", fontsize = label_font)
+            plt.plot(T,psi_out, label=fakelabel)
     #        plt.plot(TF,speed_outF, label=fixedfakelabel)
     #        plt.legend()
             
             plt.subplot(222)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.xlabel("t [sec]", fontsize = label_font)
             plt.ylabel("Roll rate [rad/s]", fontsize = label_font)
             plt.plot(T,rollr_out, label=fakelabel)
     #        plt.plot(TF,rollr_outF, label=fixedfakelabel)
             
             plt.subplot(223)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.xlabel("t [sec]", fontsize = label_font)
             plt.ylabel("Yaw rate [rad/s]", fontsize = label_font)
-            plt.plot(T,phi_out, label=fakelabel)
+            plt.plot(T,yaw_rate_out, label=fakelabel)
     #        plt.plot(TF,phi_outF, label=fixedfakelabel)
             
             plt.subplot(224)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
-            plt.ylabel("Roll Angle [rad]", fontsize = label_font)
+            plt.xlabel("t [sec]", fontsize = label_font)
+            plt.ylabel(r"$\psi$ [rad]", fontsize = label_font)
             plt.plot(T,psi_out, label=fakelabel)
-    #        plt.plot(TF,psi_outF, label=fixedfakelabel)
             
             plt.suptitle((modes[n]+' Asymmetric'), fontsize = title_font)  
             plt.show()
