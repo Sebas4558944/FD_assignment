@@ -89,19 +89,19 @@ CZq = -5.66290*1.4
 CZde = -0.69612*1.3
 
 Cmu = +0.06990*0.605
-Cmadot = +0.17800*1.4
+Cmadot = +0.17800*0.6
 Cmq = -8.79415*1.5
 
 CYb = -0.7500*0.55
 CYbdot = 0
-CYp = -0.0304*1.5
+CYp = -0.0304*0.5
 CYr = +0.8495*1.5
 CYda = -0.0400
 CYdr = +0.2300*0.7
 
 Clb = -0.10260*1.05
 Clp = -0.71085*1.575     #mostly affects aperiodic roll angle and slope in dutch roll
-Clr = +0.23760*0.85
+Clr = +0.23760*0.6
 Clda = -0.23088*0.775
 Cldr = +0.03440*1.35
 
