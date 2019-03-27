@@ -112,8 +112,8 @@ fakelabel='Model Data with Original Parameters'
 fixedfakelabel='Model Data with Adapted Parameters'
 modes = ["Phugoid", "Short Period", "Dutch Roll","Dutch Roll Yd", "Aperiodic Roll", "Spiral" ]
 
-plotting=[0,0,1,0,0,0]
-printRMS=1
+plotting=[1,1,1,0,1,1]
+printRMS=0
 indices, times, altitudes, velocities, alphas,  pitches, rolls, yaws, ailerons, rudders, elevators, rollrates,pitchrates = getEigenmotions()
 ######phugoid (n=0): plotting speed, altitude and angle of attack against time          =
 ######short period (n=1): plotting speed, altitude and angle of attack against time     =
@@ -230,7 +230,7 @@ for n in range(6):
             plt.plot(T,speed_out, label=fakelabel)
             plt.plot(TF,speed_outF, label=fixedfakelabel)
             plt.plot(time, V, label=reallabel)
-            plt.legend(loc = "lower left")
+            plt.legend(loc = "upper right")
             
             plt.subplot(232)
             plt.grid()
@@ -258,7 +258,7 @@ for n in range(6):
             plt.suptitle(modes[n], fontsize = title_font)  
             plt.show()
             
-            plt.subplot(235)
+            plt.subplot(236)
             plt.grid()
             plt.xlabel("t [sec]", fontsize = label_font)
             plt.ylabel(r"$\delta_e$ [rad]", fontsize = label_font)
@@ -342,13 +342,6 @@ for n in range(6):
                 print 'psidot/rollrate rms=', rollr_delta
             
             plt.figure()
-#            plt.subplot(231)
-#            plt.grid()
-#            plt.xlabel("Time [sec]", fontsize = label_font)
-#            plt.ylabel("Velocity [m/s]", fontsize = label_font)
-#            plt.plot(T,speed_out, label=fakelabel)
-#            plt.plot(TF,speed_outF, label=fixedfakelabel)
-#            plt.plot(time, V, label=reallabel)
 
             
             plt.subplot(231)
@@ -358,7 +351,7 @@ for n in range(6):
             plt.plot(T,rollr_out, label=fakelabel)
             plt.plot(TF,rollr_outF, label=fixedfakelabel)
             plt.plot(time, rollr, label=reallabel)
-            plt.legend(loc = "lower left")
+            plt.legend(loc="lower left")
             
             plt.subplot(232)
             plt.grid()
@@ -382,7 +375,7 @@ for n in range(6):
             plt.ylabel(r"$\delta_r$ [rad]", fontsize = label_font)
             plt.plot(time, dR, label=reallabel)
             
-            plt.subplot(235)
+            plt.subplot(236)
             plt.grid()
             plt.xlabel("t [sec]", fontsize = label_font)
             plt.ylabel(r"$\delta_a$ [rad]", fontsize = label_font)
