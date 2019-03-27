@@ -355,7 +355,7 @@ for n in range(6):
             plt.grid()
             plt.xlabel("t [sec]", fontsize = label_font)
             plt.ylabel("Roll rate [rad/s]", fontsize = label_font)
-#            plt.plot(T,rollr_out, label=fakelabel)
+            plt.plot(T,rollr_out, label=fakelabel)
             plt.plot(TF,rollr_outF, label=fixedfakelabel)
             plt.plot(time, rollr, label=reallabel)
             plt.legend(loc = "lower left")
@@ -364,7 +364,7 @@ for n in range(6):
             plt.grid()
             plt.xlabel("t [sec]", fontsize = label_font)
             plt.ylabel("Yaw rate [rad/s]", fontsize = label_font)
-#            plt.plot(T,phi_out, label=fakelabel)
+            plt.plot(T,phi_out, label=fakelabel)
             plt.plot(TF,phi_outF, label=fixedfakelabel)
             plt.plot(time, yaw, label=reallabel)
             
@@ -372,7 +372,7 @@ for n in range(6):
             plt.grid()
             plt.xlabel("t [sec]", fontsize = label_font)
             plt.ylabel(r"$\psi$ [rad]", fontsize = label_font)
-#            plt.plot(T,psi_out, label=fakelabel)
+            plt.plot(T,psi_out, label=fakelabel)
             plt.plot(TF,psi_outF, label=fixedfakelabel)
             plt.plot(time, roll, label=reallabel)
             
