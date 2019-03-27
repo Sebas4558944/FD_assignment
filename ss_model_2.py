@@ -353,7 +353,7 @@ for n in range(6):
             
             plt.subplot(231)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.xlabel("t [sec]", fontsize = label_font)
             plt.ylabel("Roll rate [rad/s]", fontsize = label_font)
 #            plt.plot(T,rollr_out, label=fakelabel)
             plt.plot(TF,rollr_outF, label=fixedfakelabel)
@@ -362,7 +362,7 @@ for n in range(6):
             
             plt.subplot(232)
             plt.grid()
-            plt.xlabel("Time [sec]", fontsize = label_font)
+            plt.xlabel("t [sec]", fontsize = label_font)
             plt.ylabel("Yaw rate [rad/s]", fontsize = label_font)
 #            plt.plot(T,phi_out, label=fakelabel)
             plt.plot(TF,phi_outF, label=fixedfakelabel)
